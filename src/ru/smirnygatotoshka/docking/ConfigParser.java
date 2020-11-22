@@ -8,19 +8,16 @@ import org.apache.hadoop.io.Text;
  * */
 public class ConfigParser 
 {
-	private Parameters parameters;
+//TODO - delete
 
-	public ConfigParser(Parameters parameters) {
-		this.parameters = parameters;
-	}
-
-	/**Считывает из строки данные о задании
-	 * @param line - строка из исходного файла.
+	/**
+	 * Считывает из строки данные о задании
+	 *
+	 * @param line   - строка из исходного файла.
 	 * @param client - объект, ответственный за отправку сообщений на сервер
-	 * @return Класс,содержащий информацию о задании
-	 * */
-	public Dock parse(Text line, DockingClient client)
-	{
+	 * @return Класс, содержащий информацию о задании
+	 */
+	public Dock parseDock(Text line) {
 		String[] description = line.toString().split(",");
 
 		DockingProperties properties = new DockingProperties();

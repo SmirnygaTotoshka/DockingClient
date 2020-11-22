@@ -1,5 +1,6 @@
 package ru.smirnygatotoshka.docking;
 
+import org.apache.hadoop.io.Writable;
 import ru.smirnygatotoshka.exception.TaskException;
 
 import java.io.IOException;
@@ -10,9 +11,10 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 
-public class DockingClient
-{
-    /**This string should be in start all servicing messages*/
+public class DockingClient implements Writable {
+    /**
+     * This string should be in start all servicing messages
+     */
     public final String SERVICE = "SERVICE:";
     private ArrayList<String> messages;
     private Socket socket;

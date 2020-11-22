@@ -3,18 +3,18 @@
  */
 package ru.smirnygatotoshka.docking;
 
+import org.apache.hadoop.io.Writable;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-
-import org.apache.hadoop.io.Writable;
 
 /**
  * @author SmirnygaTotoshka
  *
  */
 public class Vector3 implements Writable{
-
+	//TODO - delete
 	/* (non-Javadoc)
      * @see java.lang.Object#toString()
      */

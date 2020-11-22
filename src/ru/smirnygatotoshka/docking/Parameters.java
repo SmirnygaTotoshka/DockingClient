@@ -2,11 +2,7 @@ package ru.smirnygatotoshka.docking;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.io.Writable;
 
-
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -15,7 +11,7 @@ import java.util.logging.*;
 
 public class Parameters
 {
-
+//TODO - delete
     public String[] getArgs() {
         return args;
     }
