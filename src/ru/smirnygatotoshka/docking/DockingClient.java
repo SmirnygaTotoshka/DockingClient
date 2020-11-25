@@ -1,70 +1,102 @@
 package ru.smirnygatotoshka.docking;
 
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.io.Writable;
 import ru.smirnygatotoshka.exception.TaskException;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 
 public class DockingClient implements Writable {
     /**
      * This string should be in start all servicing messages
      */
-    public final String SERVICE = "SERVICE:";
     private ArrayList<String> messages;
     private Socket socket;
     private String nameSlave;
+    private boolean hasConnection;
+    private volatile File logs;
+    private String errorMessage;//if cant be establish connection
+    private ClusterProperties clusterProperties;
 
     public String getNameSlave() {
         return nameSlave;
     }
-    public static DockingClient createClient(Parameters parameters)
-    {
+
+    DockingClient() {
+
+    }
+
+    public DockingClient(ClusterProperties clusterProperties) {
         try {
-            String master = parameters.getMasterNode().split(":")[0];
-            return new DockingClient(InetAddress.getByName(master), 4445);
-        }
-        catch (Exception e) {
-            parameters.getLog().log(Level.WARNING,e.getMessage());//Write to local log only and only if can`t connect to server
-            return null;
+            this.messages = new ArrayList<>();
+            this.clusterProperties = clusterProperties;
+            this.nameSlave = InetAddress.getLocalHost().getHostName();
+            this.hasConnection = true;
+            this.errorMessage = "";
+            this.logs = new File(clusterProperties.getWorkspaceLocalDir() + File.separator + "clientLogs.txt");
+        } catch (IOException e) {
+            this.hasConnection = false;
+            this.errorMessage = e.getMessage();
+            messages.add(this.errorMessage);
         }
     }
 
-    private DockingClient(InetAddress serverAddress, int serverPort) throws Exception {
-        this.socket = new Socket(serverAddress, serverPort);
-        this.nameSlave = InetAddress.getLocalHost().getHostName();
-        this.messages = new ArrayList<>();
-    }
-    public void send(Parameters parameters)
-    {
-        try {
-            send();
-        }
-        catch (IOException | TaskException e)
-        {
-            parameters.getLog().log(Level.WARNING,e.getMessage());//Write to local log only and only if can`t connect to server
-        }
-    }
     /**
      * Send all messages to server. Removing this messages after sending.
-     * */
-    public void send() throws IOException, TaskException {
-        if (messages.isEmpty()) throw new TaskException("Trying send empty message");
-        PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
-        for (String i: messages)
-            out.println(i);
-        out.flush();
-        out.close();
-        if (!messages.removeAll(messages)) throw new TaskException("Cannot clear list of messages");
+     */
+    public void send() {
+        try {
+            this.socket = new Socket(InetAddress.getByName(clusterProperties.getIpAddressMasterNode()), 4445);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(this.socket.getOutputStream());
+            objectOutputStream.writeObject(Statistics.getInstance());
+            objectOutputStream.close();
+            if (!messages.removeAll(messages)) throw new TaskException("Cannot clear list of messages");
+            socket.close();
+        } catch (TaskException | IOException e) {
+            messages.add(e.getMessage());
+            try {
+                writeToLog(messages);
+            } catch (IOException ex) {
+                ex.printStackTrace();// TODO - ?куда записывать?
+            }
+        }
     }
 
-    public void addMessage(String msg)
-    {
+    private void writeToLog(ArrayList<String> lines) throws IOException {
+        synchronized (logs) {
+            FileUtils.writeFile(lines, logs.getAbsolutePath(), FileSystem.getLocal(clusterProperties.getJobConf()));
+        }
+    }
+
+    public void addMessage(String msg) {
         messages.add(msg);
+    }
+
+    @Override
+    public void write(DataOutput dataOutput) throws IOException {
+        clusterProperties.write(dataOutput);
+        dataOutput.writeInt(messages.size());
+        for (String s : messages)
+            dataOutput.writeUTF(s);
+        dataOutput.writeUTF(nameSlave);
+        dataOutput.writeBoolean(hasConnection);
+        dataOutput.writeUTF(errorMessage);
+    }
+
+    @Override
+    public void readFields(DataInput dataInput) throws IOException {
+        clusterProperties = new ClusterProperties();
+        clusterProperties.readFields(dataInput);
+        socket = new Socket(InetAddress.getByName(clusterProperties.getIpAddressMasterNode()), 4445);
+        for (int i = 0; i < dataInput.readInt(); i++) {
+            messages.add(dataInput.readUTF());
+        }
+        nameSlave = dataInput.readUTF();
+        hasConnection = dataInput.readBoolean();
+        errorMessage = dataInput.readUTF();
     }
 }

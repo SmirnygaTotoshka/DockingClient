@@ -65,6 +65,10 @@ public class DockingProperties implements Writable {
         this.dpfParameters = dpfParameters;
     }
 
+    DockingProperties() {
+
+    }
+
     public String getPathToFiles() {
         return pathToFiles;
     }
@@ -148,11 +152,10 @@ public class DockingProperties implements Writable {
     /**
      * @return путь к файлу гибкой части рецептора в hdfs
      */
-    public String getReceptorFlexiblePartPath()
-    {
-	    if (receptorFlexiblePart.equals(""))
-	        return receptorFlexiblePart;
-        return  pathToFiles + "/" + receptorFlexiblePart;
+    public String getReceptorFlexiblePartPath() {
+        if (receptorFlexiblePart.contentEquals(""))
+            return receptorFlexiblePart;
+        return pathToFiles + "/" + receptorFlexiblePart;
     }
 
     @Override
