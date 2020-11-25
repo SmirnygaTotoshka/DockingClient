@@ -2,6 +2,7 @@
 package ru.smirnygatotoshka.docking;
 
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import ru.smirnygatotoshka.exception.TaskException;
@@ -21,7 +22,7 @@ public class Dock implements Writable {
 	private final String[] GPF_signature = new String[]{"gridfld", "receptor", "map", "elecmap", "dsolvmap"};
 	private final String[] DPF_signature = new String[]{"fld", "move", "map", "elecmap", "desolvmap"};
 	private DockResult dockResult;
-
+	private LongWritable key;
 	private DockingClient client;
 	private DockingProperties dockingProperties;
 	private ClusterProperties clusterProperties;
@@ -34,7 +35,7 @@ public class Dock implements Writable {
 	/**
 	 * Парсит строку из файла с описанием задач
 	 */
-	public Dock(Text line, DockingClient client, ClusterProperties clusterProp) {
+	public Dock(Text line, DockingClient client, ClusterProperties clusterProp, LongWritable key) {
 		String[] description = line.toString().split(",");
 
 		String path = description[0];
@@ -48,13 +49,15 @@ public class Dock implements Writable {
 
 		this.dockingProperties = new DockingProperties(path, r, rFlex, lig, gpfName, gpfParam, dpfName, dpfParam);
 		this.client = client;
+		this.key = key;
 		this.clusterProperties = clusterProp;
 		this.errorMessage = "";
 		this.localDir = clusterProperties.getWorkspaceLocalDir();
 		try {
 			this.local = FileSystem.getLocal(clusterProperties.getJobConf());
 			this.hdfs = FileSystem.get(clusterProperties.getJobConf());
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			this.errorMessage = "Ошибка при получения доступа к файловым системам:" + e.getMessage();
 		}
 	}
@@ -118,10 +121,8 @@ public class Dock implements Writable {
 	 */
 	public DockResult launch() {
 		try {
-			dockResult = new DockResult(dockingProperties.getId(), dockingProperties.getPathToFiles());
-			client.addMessage(dockingProperties.toString());
+			dockResult = new DockResult(dockingProperties.getId(), dockingProperties.getPathToFiles(), key);
 			if (errorMessage == "") {
-
 				if (isSuccessPrepareGpf()) {
 					processingFile(getGPFLocalPath(), GPF_signature);
 					if (isSuccessAutogrid()) {
@@ -130,17 +131,18 @@ public class Dock implements Writable {
 							if (isFinihedAutodock()) {
 								dockResult.setCauseFail(DockResult.UNKNOWN_STATUS);
 								FileUtils.copy(local, getDLGLocalPath(), hdfs, dockResult.getPathDLGinHDFS());
-								client.addMessage("Выполнено.\n");
 							} else throw new TaskException("Неудача на этапе Autodock");
 						} else throw new TaskException("Неудача на этапе подготовке DPF");
 					} else throw new TaskException("Неудача на этапе Autogrid");
 				} else throw new TaskException("Неудача на этапе подготовке GPF");
 			} else throw new TaskException(errorMessage);
-		} catch (TaskException | IOException e) {
+		}
+		catch (TaskException | IOException e) {
 			dockResult.fail(e.getMessage());
-			client.addMessage(dockingProperties.toString() + "\n" + e.getMessage() + "\n");
-		} finally {
-			client.send();
+		}
+		finally {
+			if (!errorMessage.isEmpty())
+				client.getLog().warning(errorMessage);
 			return dockResult;
 		}
 	}

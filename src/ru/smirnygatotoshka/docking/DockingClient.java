@@ -1,90 +1,76 @@
 package ru.smirnygatotoshka.docking;
 
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.io.Writable;
-import ru.smirnygatotoshka.exception.TaskException;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.*;
 
 
 public class DockingClient implements Writable {
-    /**
-     * This string should be in start all servicing messages
-     */
-    private ArrayList<String> messages;
     private Socket socket;
-    private String nameSlave;
     private boolean hasConnection;
-    private volatile File logs;
-    private String errorMessage;//if cant be establish connection
     private ClusterProperties clusterProperties;
-
-    public String getNameSlave() {
-        return nameSlave;
-    }
+    private Logger log;
 
     DockingClient() {
 
     }
 
     public DockingClient(ClusterProperties clusterProperties) {
-        try {
-            this.messages = new ArrayList<>();
-            this.clusterProperties = clusterProperties;
-            this.nameSlave = InetAddress.getLocalHost().getHostName();
-            this.hasConnection = true;
-            this.errorMessage = "";
-            this.logs = new File(clusterProperties.getWorkspaceLocalDir() + File.separator + "clientLogs.txt");
-        } catch (IOException e) {
-            this.hasConnection = false;
-            this.errorMessage = e.getMessage();
-            messages.add(this.errorMessage);
-        }
+        this.clusterProperties = clusterProperties;
+        this.hasConnection = true;
+        log = setupLog();
     }
 
-    /**
-     * Send all messages to server. Removing this messages after sending.
-     */
-    public void send() {
-        try {
+    public void send(Statistics.Counters counter, int num){
+        try{
             this.socket = new Socket(InetAddress.getByName(clusterProperties.getIpAddressMasterNode()), 4445);
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(this.socket.getOutputStream());
-            objectOutputStream.writeObject(Statistics.getInstance());
-            objectOutputStream.close();
-            if (!messages.removeAll(messages)) throw new TaskException("Cannot clear list of messages");
+            PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
+            String increment = formIncrement(counter, num);
+            out.println(increment);
+            out.flush();
+            out.close();
             socket.close();
-        } catch (TaskException | IOException e) {
-            messages.add(e.getMessage());
-            try {
-                writeToLog(messages);
-            } catch (IOException ex) {
-                ex.printStackTrace();// TODO - ?куда записывать?
-            }
+        } catch (IOException e) {
+            log.warning("Can`t establish connection " + e.getMessage());
         }
     }
 
-    private void writeToLog(ArrayList<String> lines) throws IOException {
-        synchronized (logs) {
-            FileUtils.writeFile(lines, logs.getAbsolutePath(), FileSystem.getLocal(clusterProperties.getJobConf()));
+    private Logger setupLog()
+    {
+        Logger l = Logger.getLogger("");
+        String date = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss").format(new Date());
+        String logFile = clusterProperties.getWorkspaceLocalDir() + File.separator + "client_" + date + "_%u.log";
+        try{
+            FileHandler logHandler = new FileHandler(logFile,524288000,1,false);
+            Level defaultLevel = Level.WARNING;
+            logHandler.setFormatter(new SimpleFormatter());
+            logHandler.setLevel(defaultLevel);
+            for(Handler h:l.getHandlers())
+                l.removeHandler(h);
+            l.addHandler(logHandler);
+            return l;
+
+        }
+        catch (SecurityException | IOException e)
+        {
+            e.printStackTrace();
+            return null;
         }
     }
 
-    public void addMessage(String msg) {
-        messages.add(msg);
+    public String formIncrement(Statistics.Counters counter, int num) {
+        return counter.name() + "=" + num;
     }
 
     @Override
     public void write(DataOutput dataOutput) throws IOException {
         clusterProperties.write(dataOutput);
-        dataOutput.writeInt(messages.size());
-        for (String s : messages)
-            dataOutput.writeUTF(s);
-        dataOutput.writeUTF(nameSlave);
         dataOutput.writeBoolean(hasConnection);
-        dataOutput.writeUTF(errorMessage);
     }
 
     @Override
@@ -92,11 +78,10 @@ public class DockingClient implements Writable {
         clusterProperties = new ClusterProperties();
         clusterProperties.readFields(dataInput);
         socket = new Socket(InetAddress.getByName(clusterProperties.getIpAddressMasterNode()), 4445);
-        for (int i = 0; i < dataInput.readInt(); i++) {
-            messages.add(dataInput.readUTF());
-        }
-        nameSlave = dataInput.readUTF();
         hasConnection = dataInput.readBoolean();
-        errorMessage = dataInput.readUTF();
+    }
+
+    public Logger getLog() {
+        return log;
     }
 }

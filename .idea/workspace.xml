@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cec54ce2-7521-4ebe-8f26-06fbe644a3c6" name="Plans" comment="Первый шаг к изменениям, смотри TODO, needed, то делать дальше">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="cec54ce2-7521-4ebe-8f26-06fbe644a3c6" name="Plans" comment="Осталось определиться с функциями клиент/сервера">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/ConfigParser.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Dock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Dock.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingProperties.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/FileUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Parameters.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Vector3.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Task.java" beforeDir="false" />
     </list>
     <list id="2d452110-0e54-4c17-a803-f55666bd61b8" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -117,7 +112,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606087616258</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Осталось определиться с функциями клиент/сервера">
+      <created>1606295662396</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1606295662397</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -140,7 +142,8 @@
     </ignored-roots>
     <MESSAGE value="default" />
     <MESSAGE value="Первый шаг к изменениям, смотри TODO, needed, то делать дальше" />
-    <option name="LAST_COMMIT_MESSAGE" value="Первый шаг к изменениям, смотри TODO, needed, то делать дальше" />
+    <MESSAGE value="Осталось определиться с функциями клиент/сервера" />
+    <option name="LAST_COMMIT_MESSAGE" value="Осталось определиться с функциями клиент/сервера" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
@@ -158,10 +161,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="331" y="117" key="#com.intellij.ide.fileTemplates.ui.ConfigureTemplatesDialog/0.0.1366.728@0.0.1366.728" timestamp="1606001954958" />
-    <state x="488" y="84" key="#com.intellij.ide.util.MemberChooser" timestamp="1606258779606">
+    <state x="488" y="84" key="#com.intellij.ide.util.MemberChooser" timestamp="1606345860571">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="488" y="84" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1606258779606" />
+    <state x="488" y="84" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1606345860571" />
     <state x="413" y="146" key="#com.intellij.ide.util.PackageChooserDialog" timestamp="1606002056424">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -182,18 +185,18 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="238" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1366.728@0.0.1366.728" timestamp="1606130467906" />
-    <state x="413" y="115" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1606222103532">
+    <state x="413" y="115" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1606344872022">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="413" y="115" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1366.728@0.0.1366.728" timestamp="1606222103532" />
+    <state x="413" y="115" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1366.728@0.0.1366.728" timestamp="1606344872022" />
     <state x="413" y="122" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog" timestamp="1605998976525">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="413" y="122" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog/0.0.1366.728@0.0.1366.728" timestamp="1605998976525" />
-    <state x="308" y="0" key="CommitChangelistDialog2" timestamp="1606087613764">
+    <state x="308" y="0" key="CommitChangelistDialog2" timestamp="1606295658458">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="308" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1606087613764" />
+    <state x="308" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1606295658458" />
     <state x="430" y="83" key="DetectedRootsChooserDialog" timestamp="1605998869747">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -210,10 +213,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="438" y="213" key="SimpleOpenTaskDialog/0.0.1366.728@0.0.1366.728" timestamp="1606000140714" />
-    <state x="391" y="193" key="com.intellij.ide.util.TipDialog" timestamp="1606295354246">
+    <state x="391" y="193" key="com.intellij.ide.util.TipDialog" timestamp="1606304552324">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="391" y="193" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1606295354246" />
+    <state x="391" y="193" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1606304552324" />
     <state x="387" y="266" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1606002132287">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -226,10 +229,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="339" y="162" width="672" height="677" key="run.anything.popup/0.0.1366.728@0.0.1366.728" timestamp="1606201312380" />
-    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1606258561283">
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1606345296076">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1606258561283" />
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1606345296076" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
