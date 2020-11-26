@@ -2,6 +2,7 @@
 package ru.smirnygatotoshka.docking;
 
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
@@ -141,6 +142,15 @@ public class Dock implements Writable {
 			dockResult.fail(e.getMessage());
 		}
 		finally {
+			try {
+				Path wd = new Path(localDir);
+				if (FileUtils.exist(wd,local))
+					FileUtils.deleteFolder(wd, local);
+			}
+			catch (IOException | TaskException e) {
+				String s = "Не удалось высвободить ресурсы для " + dockingProperties.getId() + "\n" + e.getMessage();
+				client.getLog().warning(s);
+			}
 			if (!errorMessage.isEmpty())
 				client.getLog().warning(errorMessage);
 			return dockResult;

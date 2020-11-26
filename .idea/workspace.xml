@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cec54ce2-7521-4ebe-8f26-06fbe644a3c6" name="Plans" comment="Осталось определиться с функциями клиент/сервера">
+    <list default="true" id="cec54ce2-7521-4ebe-8f26-06fbe644a3c6" name="Plans" comment="Осталось написать Main и тесты">
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/DockingClient_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Dock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Dock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Task.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/FileUtils.java" afterDir="false" />
     </list>
     <list id="2d452110-0e54-4c17-a803-f55666bd61b8" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -56,7 +57,7 @@
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
     <property name="create.test.in.the.same.root" value="true" />
     <property name="last_opened_file_path" value="D:/hadoop3.1.1/share" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
@@ -119,7 +120,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606295662397</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Осталось написать Main и тесты">
+      <created>1606348794467</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1606348794467</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -136,23 +144,22 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <ignored-roots>
       <path value="$PROJECT_DIR$/DockingClient" />
     </ignored-roots>
     <MESSAGE value="default" />
     <MESSAGE value="Первый шаг к изменениям, смотри TODO, needed, то делать дальше" />
     <MESSAGE value="Осталось определиться с функциями клиент/сервера" />
-    <option name="LAST_COMMIT_MESSAGE" value="Осталось определиться с функциями клиент/сервера" />
+    <MESSAGE value="Осталось написать Main и тесты" />
+    <option name="LAST_COMMIT_MESSAGE" value="Осталось написать Main и тесты" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
-    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
-    <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="275" y="26" key="#Project_Structure" timestamp="1605998977544">
+    <state x="275" y="26" key="#Project_Structure" timestamp="1606388047565">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="275" y="26" key="#Project_Structure/0.0.1366.728@0.0.1366.728" timestamp="1605998977544" />
+    <state x="275" y="26" key="#Project_Structure/0.0.1366.728@0.0.1366.728" timestamp="1606388047565" />
     <state x="448" y="175" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1606000263938">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -169,10 +176,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="413" y="146" key="#com.intellij.ide.util.PackageChooserDialog/0.0.1366.728@0.0.1366.728" timestamp="1606002056424" />
-    <state x="413" y="155" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1606002079491">
+    <state x="413" y="155" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1606388002228">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="413" y="155" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1366.728@0.0.1366.728" timestamp="1606002079491" />
+    <state x="413" y="155" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1366.728@0.0.1366.728" timestamp="1606388002228" />
     <state x="513" y="81" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog" timestamp="1605998772196">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -193,10 +200,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="413" y="122" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog/0.0.1366.728@0.0.1366.728" timestamp="1605998976525" />
-    <state x="308" y="0" key="CommitChangelistDialog2" timestamp="1606295658458">
+    <state x="308" y="0" key="CommitChangelistDialog2" timestamp="1606348792066">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="308" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1606295658458" />
+    <state x="308" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1606348792066" />
     <state x="430" y="83" key="DetectedRootsChooserDialog" timestamp="1605998869747">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -213,10 +220,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="438" y="213" key="SimpleOpenTaskDialog/0.0.1366.728@0.0.1366.728" timestamp="1606000140714" />
-    <state x="391" y="193" key="com.intellij.ide.util.TipDialog" timestamp="1606304552324">
+    <state x="391" y="193" key="com.intellij.ide.util.TipDialog" timestamp="1606386706990">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="391" y="193" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1606304552324" />
+    <state x="391" y="193" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1606386706990" />
     <state x="387" y="266" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1606002132287">
       <screen x="0" y="0" width="1366" height="728" />
     </state>

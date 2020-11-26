@@ -78,9 +78,8 @@ public final class FileUtils {
         FileStatus[] fileStatuses = sys.listStatus(path);
         for (FileStatus status : fileStatuses) {
             String name = status.getPath().getName();
-            if (!name.contains(".dlg"))
-                if (!sys.delete(status.getPath(), true))
-                    throw new TaskException("Cannot delete file " + status.getPath().toString());
+            if (!sys.delete(status.getPath(), true))
+                throw new TaskException("Cannot delete file " + status.getPath().toString());
         }
         //if (!sys.delete(path,true)) throw new TaskException("Cannot delete folder " + path);
     }
