@@ -6,11 +6,8 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cec54ce2-7521-4ebe-8f26-06fbe644a3c6" name="Plans" comment="Без ошибок. Не тестировано!">
-      <change afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/test/StatisticsTest.java" afterDir="false" />
+    <list default="true" id="cec54ce2-7521-4ebe-8f26-06fbe644a3c6" name="Plans" comment="Некоторые тесты. Нужны тесты на кластере.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Dock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Dock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingProperties.java" afterDir="false" />
     </list>
     <list id="2d452110-0e54-4c17-a803-f55666bd61b8" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -229,7 +226,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606388502781</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Некоторые тесты. Нужны тесты на кластере.">
+      <created>1606838869951</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1606838869951</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -255,7 +259,8 @@
     <MESSAGE value="Осталось определиться с функциями клиент/сервера" />
     <MESSAGE value="Осталось написать Main и тесты" />
     <MESSAGE value="Без ошибок. Не тестировано!" />
-    <option name="LAST_COMMIT_MESSAGE" value="Без ошибок. Не тестировано!" />
+    <MESSAGE value="Некоторые тесты. Нужны тесты на кластере." />
+    <option name="LAST_COMMIT_MESSAGE" value="Некоторые тесты. Нужны тесты на кластере." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="WindowStateProjectService">
@@ -307,10 +312,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="413" y="122" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog/0.0.1366.728@0.0.1366.728" timestamp="1605998976525" />
-    <state x="308" y="0" key="CommitChangelistDialog2" timestamp="1606388500687">
+    <state x="308" y="0" key="CommitChangelistDialog2" timestamp="1606838865121">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="308" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1606388500687" />
+    <state x="308" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1606838865121" />
     <state x="430" y="83" key="DetectedRootsChooserDialog" timestamp="1605998869747">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -367,6 +372,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="387" y="266" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD/0.0.1366.728@0.0.1366.728" timestamp="1606002132287" />
+    <state x="494" y="284" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1606839082379">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="494" y="284" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1366.728@0.0.1366.728" timestamp="1606839082379" />
     <state x="454" y="85" key="com.intellij.testIntegration.createTest.CreateTestDialog" timestamp="1606838581027">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -390,12 +399,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingProperties.java</url>
-          <line>126</line>
+          <line>125</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingProperties.java</url>
-          <line>116</line>
+          <line>115</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
