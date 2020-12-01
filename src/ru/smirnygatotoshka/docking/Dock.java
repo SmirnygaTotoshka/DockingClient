@@ -150,9 +150,12 @@ public class Dock implements Writable {
 			catch (IOException | TaskException e) {
 				String s = "Не удалось высвободить ресурсы для " + dockingProperties.getId() + "\n" + e.getMessage();
 				client.getLog().warning(s);
-			}
-			if (!errorMessage.isEmpty())
-				client.getLog().warning(errorMessage);
+                client.getLog().warning(dockingProperties.toString());
+            }
+			if (!errorMessage.isEmpty()) {
+                client.getLog().warning(errorMessage);
+                client.getLog().warning(dockingProperties.toString());
+            }
 			return dockResult;
 		}
 	}

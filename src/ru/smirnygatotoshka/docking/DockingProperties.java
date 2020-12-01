@@ -66,7 +66,14 @@ public class DockingProperties implements Writable {
     }
 
     DockingProperties() {
-
+        this.pathToFiles = "/";
+        this.receptor = "receptor.pdbqt";
+        this.receptorFlexiblePart = "receptorFlexiblePart.pqbqt";
+        this.ligand = "ligand.pdbqt";
+        this.gpfName = "gpfName.gpf";
+        this.gpfParameters = "";
+        this.dpfName = "dpfName.gpf";
+        this.dpfParameters = "";
     }
 
     public String getPathToFiles() {
@@ -103,10 +110,22 @@ public class DockingProperties implements Writable {
 
     /**@return Возвращает идентификатор задания:рецептор_лиганд_гибкая часть рецептора_имя gpf*/
     public String getId() {
-        return receptor.substring(0, receptor.charAt('.')) + "_" +
-                ligand.substring(0, ligand.charAt('.')) + "_" +
-                receptorFlexiblePart.substring(0, receptorFlexiblePart.charAt('.')) + "_" +
-                gpfName.substring(0, gpfName.charAt('.'));
+        String id = "";
+        try{
+            if (receptorFlexiblePart.contentEquals(""))
+                id =  receptor.substring(0, receptor.indexOf('.')) + "_" +
+                        ligand.substring(0, ligand.indexOf('.')) + "_None_" +
+                        gpfName.substring(0, gpfName.indexOf('.'));
+            else
+                id = receptor.substring(0, receptor.indexOf('.')) + "_" +
+                        ligand.substring(0, ligand.indexOf('.')) + "_" +
+                        receptorFlexiblePart.substring(0, receptorFlexiblePart.indexOf('.')) + "_" +
+                        gpfName.substring(0, gpfName.indexOf('.'));
+        }
+        catch (StringIndexOutOfBoundsException e) {
+            id = receptor + "_" + ligand + "_" + receptorFlexiblePart + "_" + gpfName;
+        }
+        return id;
     }
 
     @Override
