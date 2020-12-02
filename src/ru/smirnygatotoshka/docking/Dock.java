@@ -37,18 +37,8 @@ public class Dock implements Writable {
 	 * Парсит строку из файла с описанием задач
 	 */
 	public Dock(Text line, DockingClient client, ClusterProperties clusterProp, LongWritable key) {
-		String[] description = line.toString().split(",");
 
-		String path = description[0];
-		String r = description[1];
-		String rFlex = description[2];
-		String lig = description[3];
-		String gpfName = description[4];
-		String gpfParam = description[5];
-		String dpfName = description[6];
-		String dpfParam = description[7];
-
-		this.dockingProperties = new DockingProperties(path, r, rFlex, lig, gpfName, gpfParam, dpfName, dpfParam);
+		this.dockingProperties = splitProperties(line);
 		this.client = client;
 		this.key = key;
 		this.clusterProperties = clusterProp;
@@ -63,6 +53,24 @@ public class Dock implements Writable {
 		}
 	}
 
+	public Dock() {
+		//for tests TODO - delete
+	}
+//TODO - make private
+	public DockingProperties splitProperties(Text line){
+		String[] description = line.toString().split(";");
+
+		String path = description[0];
+		String r = description[1];
+		String rFlex = description[2];
+		String lig = description[3];
+		String gpfName = description[4];
+		String gpfParam = description[5];
+		String dpfName = description[6];
+		String dpfParam = description[7];
+
+		return new DockingProperties(path, r, rFlex, lig, gpfName, gpfParam, dpfName, dpfParam);
+	}
 	private String formCommand(Pipeline action) {
 		String cmd;
 		String flex = dockingProperties.getReceptorFlexiblePart().contentEquals("") ? "" :
@@ -130,7 +138,6 @@ public class Dock implements Writable {
 						if (isSuccessPrepareDpf()) {
 							processingFile(getDPFLocalPath(), DPF_signature);
 							if (isFinihedAutodock()) {
-								dockResult.setCauseFail(DockResult.UNKNOWN_STATUS);
 								FileUtils.copy(local, getDLGLocalPath(), hdfs, dockResult.getPathDLGinHDFS());
 							} else throw new TaskException("Неудача на этапе Autodock");
 						} else throw new TaskException("Неудача на этапе подготовке DPF");

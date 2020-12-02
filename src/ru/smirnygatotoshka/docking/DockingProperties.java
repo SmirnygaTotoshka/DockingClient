@@ -12,7 +12,7 @@ import java.io.IOException;
  * @author SmirnygaTotoshka
  */
 public class DockingProperties implements Writable {
-//TODO - tests
+    //TODO - tests
     /**
      * Путь к файлам в hdfs
      * */

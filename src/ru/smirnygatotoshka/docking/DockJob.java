@@ -64,7 +64,8 @@ public class DockJob extends Configured implements Tool {
 		jobConf.setInputFormat(TextInputFormat.class);
 		jobConf.setNumMapTasks(Integer.parseInt(cluster.getMapperNumber()));
 		jobConf.set("mapreduce.task.timeout", "0");
-		job = JobClient.runJob(jobConf);
+        Statistics.getInstance().setNumTasks(FileUtils.readFile(arg0[0],FileSystem.get(conf)).size());
+        job = JobClient.runJob(jobConf);
 
 		return 0;
 	}
@@ -106,6 +107,7 @@ public class DockJob extends Configured implements Tool {
 	 * @author SmirnygaTotoshka
 	 */
 	public static class DockReducer extends MapReduceBase implements Reducer<Text, DockResult, LongWritable, Text> {
+
 		private DockingClient client;
 		private ClusterProperties clusterProperties;
 		private FileSystem hdfs;
@@ -131,13 +133,13 @@ public class DockJob extends Configured implements Tool {
 					if (error_message.contentEquals("")) {
 						if (hasSuccessDLG(result.getPathDLGinHDFS())) {
 							float energy = parseHistogram(result.getPathDLGinHDFS());
-							if (energy == DockResult.FAILED_ENERGY) {
+							if (energy == -100000000F) {
 								result.fail("Не найдено значение энергии");
 								client.send(Statistics.Counters.ANALYZE_FAIL, 1);
-							} else if (energy == DockResult.FAILED_ENERGY - 1) {
+							} else if (energy == -100000000F - 1) {
 								result.fail("Не удалось открыть DLG.");
 								client.send(Statistics.Counters.ANALYZE_FAIL, 1);
-							} else if (energy == DockResult.FAILED_ENERGY - 2) {
+							} else if (energy == -100000000F - 2) {
 								result.fail("Не удалось считать энергию.");
 								client.send(Statistics.Counters.ANALYZE_FAIL, 1);
 							} else {
@@ -196,11 +198,11 @@ public class DockJob extends Configured implements Tool {
 						return Float.parseFloat(data[1].replace(" ", ""));
 					}
 				}
-				return DockResult.FAILED_ENERGY;
+				return -100000000F;
 			} catch (IOException e) {
-				return DockResult.FAILED_ENERGY - 1;
+				return -100000000F - 1;
 			} catch (NumberFormatException e) {
-				return DockResult.FAILED_ENERGY - 2;
+				return -100000000F - 2;
 			}
 		}
 	}

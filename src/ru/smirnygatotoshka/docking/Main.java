@@ -1,7 +1,6 @@
 package ru.smirnygatotoshka.docking;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.util.ToolRunner;
 
 import javax.mail.MessagingException;
@@ -25,12 +24,12 @@ public class Main {
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
         Date start = new Date(System.currentTimeMillis());
         Date finish;
+        ClusterProperties cluster = null;
         try {
             Configuration configuration = new Configuration();
-            ClusterProperties cluster = new ClusterProperties(args[1], configuration);
+            cluster = new ClusterProperties(args[1], configuration);
             DockingServer server = new DockingServer(cluster);
             DockJob dockJob = new DockJob(cluster);
-            Statistics.getInstance().setNumTasks(FileUtils.readFile(args[0],FileSystem.getLocal(configuration)).size());
             server.start();
             res = ToolRunner.run(configuration, dockJob, args);
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
@@ -41,7 +40,8 @@ public class Main {
         }
         finally {
             finish = new Date(System.currentTimeMillis());
-            String message = "Task " + args[2] + " has completed with code " + res + ".\n" +
+            String taskName = cluster.equals(null) ? "FAILED_TASK" : cluster.getTaskName();
+            String message = "Task " + taskName + " has completed with code " + res + ".\n" +
                     "Statistics:\n" +
                     "Start time " + format.format(start) + "\n" +
                     Statistics.getInstance().toString() +

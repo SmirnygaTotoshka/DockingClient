@@ -12,11 +12,10 @@ import java.io.IOException;
  * Класс, содержащий информацию о выполнении докинга. Служит результатом Map и ключом Reduce.
  * На этапе Map - получение идентификатора задачи и пути к файлу содержащий результаты
  * На этапе Reduce - определяется успешность выполнения и счиывается минимальная энергия.
+ *
  * @author SmirnygaTotoshka
- * */
+ */
 public class DockResult implements WritableComparable<LongWritable> {
-    public static final String UNKNOWN_STATUS = "Unknown status";
-    public static final float FAILED_ENERGY = -100000000F;
     private String id;
     private String pathDLGinHDFS;
     private float energy;
@@ -44,18 +43,38 @@ public class DockResult implements WritableComparable<LongWritable> {
         this.causeFail = causeFail;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setPathDLGinHDFS(String pathDLGinHDFS) {
+        this.pathDLGinHDFS = pathDLGinHDFS;
+    }
+
+    public void setEnergy(float energy) {
+        this.energy = energy;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public void setKey(LongWritable key) {
+        this.key = key;
+    }
 
     /**
      * Random key for comparing. From zero to 2<sup>30</sup>
-     * */
+     */
 
 
     public DockResult(String id, String pathToHDFS, LongWritable key) {
         this.id = id;
         this.pathDLGinHDFS = pathToHDFS + "/" + id + ".dlg";
         this.key = key;
+        this.energy = -1000.001F;
         this.success = true;
-        this.causeFail = UNKNOWN_STATUS;
+        this.causeFail = "Unknown status";
     }
 
     @Override
@@ -69,17 +88,17 @@ public class DockResult implements WritableComparable<LongWritable> {
         dataOutput.writeUTF(pathDLGinHDFS);
         dataOutput.writeBoolean(success);
         dataOutput.writeFloat(energy);
-        key.write(dataOutput);
         dataOutput.writeUTF(causeFail);
+        key.write(dataOutput);
     }
 
-    public void fail(String cause){
+    public void fail(String cause) {
         success = false;
-        energy = FAILED_ENERGY;
+        energy = -100000000F;//TODO - Warning dont use static constant
         causeFail = cause;
     }
 
-    public void success(float energy){
+    public void success(float energy) {
         success = true;
         this.energy = energy;
         causeFail = "Not Fail";
@@ -100,20 +119,20 @@ public class DockResult implements WritableComparable<LongWritable> {
         pathDLGinHDFS = dataInput.readUTF();
         success = dataInput.readBoolean();
         energy = dataInput.readFloat();
+        causeFail = dataInput.readUTF();
         key = new LongWritable();
         key.readFields(dataInput);
-        causeFail = dataInput.readUTF();
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return id + "\t" + pathDLGinHDFS + "\t" + success + "\t" + energy + "\t" + causeFail;
     }
 
     /**
      * Вернуть конечное значение редьюсера
-     * */
-    public Text getText(){
+     */
+    public Text getText() {
         return new Text(this.toString());
     }
 
