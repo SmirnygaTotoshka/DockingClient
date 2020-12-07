@@ -77,24 +77,24 @@ public class DockResult implements WritableComparable<LongWritable> {
         this.causeFail = "Unknown status";
     }
 
+    public DockResult(){
+        this.id = "id";
+        this.pathDLGinHDFS = "/" + id + ".dlg";
+        this.key = new LongWritable(0);
+        this.energy = -1000.001F;
+        this.success = true;
+        this.causeFail = "Unknown status";
+    }
     @Override
     public int compareTo(LongWritable o) {
         return key.compareTo(o);
     }
 
-    @Override
-    public void write(DataOutput dataOutput) throws IOException {
-        dataOutput.writeUTF(id);
-        dataOutput.writeUTF(pathDLGinHDFS);
-        dataOutput.writeBoolean(success);
-        dataOutput.writeFloat(energy);
-        dataOutput.writeUTF(causeFail);
-        key.write(dataOutput);
-    }
+
 
     public void fail(String cause) {
         success = false;
-        energy = -100000000F;//TODO - Warning dont use static constant
+        energy = -100000F;//TODO - Warning dont use static constant
         causeFail = cause;
     }
 
@@ -123,7 +123,15 @@ public class DockResult implements WritableComparable<LongWritable> {
         key = new LongWritable();
         key.readFields(dataInput);
     }
-
+    @Override
+    public void write(DataOutput dataOutput) throws IOException {
+        dataOutput.writeUTF(id);
+        dataOutput.writeUTF(pathDLGinHDFS);
+        dataOutput.writeBoolean(success);
+        dataOutput.writeFloat(energy);
+        dataOutput.writeUTF(causeFail);
+        key.write(dataOutput);
+    }
     @Override
     public String toString() {
         return id + "\t" + pathDLGinHDFS + "\t" + success + "\t" + energy + "\t" + causeFail;

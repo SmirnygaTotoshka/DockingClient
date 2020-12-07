@@ -1,7 +1,5 @@
 package ru.smirnygatotoshka.docking;
 
-import ru.smirnygatotoshka.exception.TaskException;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,17 +16,18 @@ public class DockingServer extends Thread{
     private ExecutorService executorService = Executors.newFixedThreadPool(50);
     private Statistics statistics = Statistics.getInstance();
 
-    public DockingServer(ClusterProperties clusterProperties) throws Exception {
+    public DockingServer(ClusterProperties clusterProperties) throws IOException {
         this.server = new ServerSocket(4445, 1, InetAddress.getByName(clusterProperties.getIpAddressMasterNode()));
     }
 
     @Override
     public void run(){
         try {
+            System.out.println("Server is started.");
             listen();//TODO - Server fall after 1 connection closed. Repair + send one message not many
         }
         catch (Exception e) {
-            System.err.println("Server is fall");
+            System.err.println("Server is fall.");
             e.printStackTrace();
         }
     }
@@ -58,7 +57,9 @@ public class DockingServer extends Thread{
         }
         server.close();
         executorService.shutdown();
+        System.out.println("Server is stopped.");
     }
+
     private void parseAnswer(InputStream stream) throws IOException, TaskException, NumberFormatException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         String answer = reader.readLine();
@@ -79,28 +80,40 @@ public class DockingServer extends Thread{
     private void printDockingProgress(){
         synchronized (statistics) {
             String bar = "\rExecution[";
-            int progress = (int) statistics.getAll() / statistics.getNumTasks() * 100;
-            int symbols = progress / 5;
-            for (int i = 0; i <= symbols; i++) {
-                bar += "+";
+            try {
+                float progress = statistics.getAll() / statistics.getNumTasks() * 100;
+                int symbols = Math.round(progress / 5);
+                for (int i = 0; i <= symbols; i++) {
+                    bar += "+";
+                }
+                bar += "]\t" + progress + "%\t" + statistics.getAll() + "/" + statistics.getNumTasks();
+                System.out.println(bar);
             }
-            bar += "]\t" + progress + "%\t" + statistics.getAll() + "/" + statistics.getNumTasks();
-            System.out.println(bar);
+            catch (ArithmeticException e){
+                bar += "]\t" + statistics.getAll();
+                System.out.println(bar);
+            }
         }
     }
 
     private void printAnalyzeProgress(){
         synchronized (statistics) {
             String bar = "\rAnalyze[";
-            int progress = (int) (statistics.getExecuteFail() + statistics.getSuccess() + statistics.getAnalyzeFail()) / statistics.getNumTasks() * 100;
-            int symbols = progress / 5;
-            for (int i = 0; i <= symbols; i++) {
-                bar += "+";
+            try {
+                float progress = (statistics.getExecuteFail() + statistics.getSuccess() + statistics.getAnalyzeFail()) / statistics.getNumTasks() * 100;
+                int symbols = Math.round(progress / 5);
+                for (int i = 0; i <= symbols; i++) {
+                    bar += "+";
+                }
+                int success_procent = Math.round(statistics.getSuccess() / statistics.getNumTasks() * 100);
+                int fail_procent = Math.round((statistics.getExecuteFail() + statistics.getAnalyzeFail()) / statistics.getNumTasks() * 100);
+                bar += "]\t" + progress + "%\t" + "Успешно = " + success_procent + "\tПровалено = " + fail_procent;
+                System.out.println(bar);
             }
-            int success_procent = statistics.getSuccess() / statistics.getNumTasks() * 100;
-            int fail_procent = (statistics.getExecuteFail() + statistics.getAnalyzeFail()) / statistics.getNumTasks() * 100;
-            bar += "]\t" + progress + "%\t" +  "Успешно = " + success_procent + "\tПровалено = " + fail_procent;
-            System.out.println(bar);
+            catch (ArithmeticException e){
+                bar += "]\t" + "Успешно = " + statistics.getSuccess()  + "\tПровалено = " + (statistics.getExecuteFail() + statistics.getAnalyzeFail());
+                System.out.println(bar);
+            }
         }
     }
 }

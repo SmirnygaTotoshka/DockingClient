@@ -4,6 +4,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ToolRunner;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -32,10 +33,13 @@ public class Main {
             DockJob dockJob = new DockJob(cluster);
             server.start();
             res = ToolRunner.run(configuration, dockJob, args);
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
         }
         catch (Exception e){
             res = -1;
+            if (e instanceof NullPointerException)
+                res = -2;
+            if (e instanceof IOException)
+                res = -3;
             e.printStackTrace();
         }
         finally {
@@ -54,6 +58,7 @@ public class Main {
             catch (MessagingException e) {
                 e.printStackTrace();
             }
+            System.out.println("Res="+res);
             System.exit(res);
         }
     }

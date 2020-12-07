@@ -1,7 +1,5 @@
 package ru.smirnygatotoshka.docking;
 
-import ru.smirnygatotoshka.exception.TaskException;
-
 import java.text.DecimalFormat;
 
 public class Statistics {

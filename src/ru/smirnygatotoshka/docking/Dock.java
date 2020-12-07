@@ -5,51 +5,60 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.Writable;
-import ru.smirnygatotoshka.exception.TaskException;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  * @author SmirnygaTotoshka
- * TODO - formCommand, tests
+ * TODO - не предназначен для запуска на windows
+ *
  */
-public class Dock implements Writable {
+public class Dock {
 
 	private final String[] GPF_signature = new String[]{"gridfld", "receptor", "map", "elecmap", "dsolvmap"};
 	private final String[] DPF_signature = new String[]{"fld", "move", "map", "elecmap", "desolvmap"};
 	private DockResult dockResult;
 	private LongWritable key;
-	private DockingClient client;
+
 	private DockingProperties dockingProperties;
 	private ClusterProperties clusterProperties;
-	private transient Runtime runtime = Runtime.getRuntime();
-	private String errorMessage;//if haven`t errors - empty string;
+	private Runtime runtime = Runtime.getRuntime();
+	private String errorMessage;
+	private ArrayList<String> msg;//if haven`t errors - empty string;
 	private String localSep = File.separator;
 	private String localDir;
 	private FileSystem local, hdfs;
+	private Log log;
 
 	/**
 	 * Парсит строку из файла с описанием задач
 	 */
-	public Dock(Text line, DockingClient client, ClusterProperties clusterProp, LongWritable key) {
+	public Dock(Text line, ClusterProperties clusterProp, LongWritable key) {
 
 		this.dockingProperties = splitProperties(line);
-		this.client = client;
 		this.key = key;
 		this.clusterProperties = clusterProp;
 		this.errorMessage = "";
-		this.localDir = clusterProperties.getWorkspaceLocalDir();
+		this.localDir = clusterProperties.getWorkspaceLocalDir() + localSep + dockingProperties.getId();
+		this.msg = new ArrayList<>();
 		try {
 			this.local = FileSystem.getLocal(clusterProperties.getJobConf());
 			this.hdfs = FileSystem.get(clusterProperties.getJobConf());
 		}
 		catch (IOException e) {
 			this.errorMessage = "Ошибка при получения доступа к файловым системам:" + e.getMessage();
+		}
+		try {
+			copyToLocal();
+		} catch (IOException e) {
+			errorMessage = "Ошибка при копировании файла "+e.getMessage();
+		}
+		try {
+			this.log = new Log(clusterProperties.getWorkspaceLocalDir() + localSep + dockingProperties.getId() + ".log");
+		} catch (IOException e) {
+			errorMessage = "Ошибка при создании лога "+e.getMessage();
 		}
 	}
 
@@ -58,7 +67,7 @@ public class Dock implements Writable {
 	}
 //TODO - make private
 	public DockingProperties splitProperties(Text line){
-		String[] description = line.toString().split(";");
+		String[] description = line.toString().trim().split(";");
 
 		String path = description[0];
 		String r = description[1];
@@ -71,18 +80,35 @@ public class Dock implements Writable {
 
 		return new DockingProperties(path, r, rFlex, lig, gpfName, gpfParam, dpfName, dpfParam);
 	}
+
 	private String formCommand(Pipeline action) {
 		String cmd;
-		String flex = dockingProperties.getReceptorFlexiblePart().contentEquals("") ? "" :
+		String flex = dockingProperties.getReceptorFlexiblePart().isEmpty() ? "" :
 				" -x " + getReceptorFlexiblePartLocalPath();
 		switch (action) {
 			case PREPARE_GPF:
-				cmd = clusterProperties.getPathToMGLTools() + localSep + "python " + getScriptsPath() +
-						"prepare_gpf4.py" +
+				if (localSep.contentEquals("/"))
+					cmd = "python " + getScriptsPath() +
+							"prepare_gpf.py" +
+							" -l " + getLigandLocalPath() +
+							" -r " + getReceptorLocalPath() + flex +
+							" -o " + getGPFLocalPath() +
+							dockingProperties.getGpfParameters();
+				else
+					cmd = clusterProperties.getPathToMGLTools() + localSep + "python " + getScriptsPath() +
+						"prepare_gpf.py" +
 						" -l " + getLigandLocalPath() +
 						" -r " + getReceptorLocalPath() + flex +
 						" -o " + getGPFLocalPath() +
 						dockingProperties.getGpfParameters();
+				break;
+			case CONVERT_GPF:
+					cmd = "python " + getScriptsPath() +
+						"gpf3_to_gpf4.py" +
+						" -s " + getGPFLocalPath() +
+						" -l " + getLigandLocalPath() +
+						" -r " + getReceptorLocalPath() +
+						" -o " + getGPFLocalPath();
 				break;
 			case AUTOGRID:
 				if (localSep.contentEquals("/"))// it mean node on Unix OS
@@ -92,8 +118,16 @@ public class Dock implements Writable {
 					cmd = "autogrid4.exe -p " + getGPFLocalPath() + " -l " + getGLGLocalPath();
 				break;
 			case PREPARE_DPF:
-				cmd = clusterProperties.getPathToMGLTools() + localSep + "python " + getScriptsPath() +
-						"prepare_dpf42.py" +
+				if (localSep.contentEquals("/"))
+					cmd = "python " + getScriptsPath() +
+							"prepare_dpf4.py" +
+							" -l " + getLigandLocalPath() +
+							" -r " + getReceptorLocalPath() + flex +
+							" -o " + getDPFLocalPath() +
+							dockingProperties.getDpfParameters();
+				else
+					cmd = clusterProperties.getPathToMGLTools() + localSep + "python " + getScriptsPath() +
+						"prepare_dpf4.py" +
 						" -l " + getLigandLocalPath() +
 						" -r " + getReceptorLocalPath() + flex +
 						" -o " + getDPFLocalPath() +
@@ -109,6 +143,7 @@ public class Dock implements Writable {
 			default:
 				cmd = "";
 		}
+		msg.add(cmd + "\n");
 		return cmd;
 	}
 
@@ -131,40 +166,64 @@ public class Dock implements Writable {
 	public DockResult launch() {
 		try {
 			dockResult = new DockResult(dockingProperties.getId(), dockingProperties.getPathToFiles(), key);
-			if (errorMessage == "") {
+			if (errorMessage.isEmpty()) {
 				if (isSuccessPrepareGpf()) {
-					processingFile(getGPFLocalPath(), GPF_signature);
-					if (isSuccessAutogrid()) {
-						if (isSuccessPrepareDpf()) {
-							processingFile(getDPFLocalPath(), DPF_signature);
-							if (isFinihedAutodock()) {
-								FileUtils.copy(local, getDLGLocalPath(), hdfs, dockResult.getPathDLGinHDFS());
-							} else throw new TaskException("Неудача на этапе Autodock");
-						} else throw new TaskException("Неудача на этапе подготовке DPF");
-					} else throw new TaskException("Неудача на этапе Autogrid");
+					if (isSuccessConvertGpf()) {
+						processingFile(getGPFLocalPath(), GPF_signature);
+						if (isSuccessAutogrid()) {
+							if (isSuccessPrepareDpf()) {
+								processingFile(getDPFLocalPath(), DPF_signature);
+								if (isFinihedAutodock()) {
+									FileUtils.copy(local, getDLGLocalPath(), hdfs, dockResult.getPathDLGinHDFS());
+								} else throw new TaskException("Неудача на этапе Autodock");
+							} else throw new TaskException("Неудача на этапе подготовке DPF");
+						} else throw new TaskException("Неудача на этапе Autogrid");
+					} else throw new TaskException("Неудача на этапе конвертации GPF");
 				} else throw new TaskException("Неудача на этапе подготовке GPF");
 			} else throw new TaskException(errorMessage);
 		}
-		catch (TaskException | IOException e) {
-			dockResult.fail(e.getMessage());
+		catch (TaskException e) {
+			dockResult.fail("TaskException" + e.getMessage());
+			msg.add("TaskException" + e.getMessage());
+		}
+		catch (IOException e){
+			dockResult.fail("IOException: " + e.getMessage());
+			msg.add("IOException: " + e.getMessage());
 		}
 		finally {
-			try {
+			/*try {
 				Path wd = new Path(localDir);
 				if (FileUtils.exist(wd,local))
 					FileUtils.deleteFolder(wd, local);
 			}
 			catch (IOException | TaskException e) {
 				String s = "Не удалось высвободить ресурсы для " + dockingProperties.getId() + "\n" + e.getMessage();
-				client.getLog().warning(s);
-                client.getLog().warning(dockingProperties.toString());
+				msg.add(s);
+				msg.add(dockingProperties.toString());
+
             }
 			if (!errorMessage.isEmpty()) {
-                client.getLog().warning(errorMessage);
-                client.getLog().warning(dockingProperties.toString());
-            }
+				msg.add(dockingProperties.toString());
+				msg.add(errorMessage);
+            }*/
+			log.writeRecord(msg);
+			try {
+				log.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			return dockResult;
 		}
+	}
+
+	private void copyToLocal() throws IOException {
+		if (!local.exists(new Path(localDir)))
+			local.mkdirs(new Path(localDir));
+		FileUtils.copy(hdfs, dockingProperties.getReceptorPath(), local, getReceptorLocalPath());
+		FileUtils.copy(hdfs, dockingProperties.getLigandPath(), local, getLigandLocalPath());
+		if (!dockingProperties.getReceptorFlexiblePart().isEmpty())
+			FileUtils.copy(hdfs, dockingProperties.getReceptorFlexiblePartPath(), local, getReceptorFlexiblePartLocalPath());
+
 	}
 
 	private boolean isFinihedAutodock() {
@@ -224,7 +283,21 @@ public class Dock implements Writable {
 			}
 		}
 	}
-
+	private boolean isSuccessConvertGpf() {
+		int code = launchCommand(formCommand(Pipeline.CONVERT_GPF));
+		if (code != 0)
+			return false;
+		else {
+			try {
+				ArrayList<String> lines = FileUtils.readFile(getGPFLocalPath(), local);
+				if (lines.size() == 0)
+					return false;
+				return hasSignature(lines, GPF_signature);
+			} catch (IOException e) {
+				return false;
+			}
+		}
+	}
 	private boolean hasSignature(ArrayList<String> lines, String[] signature) {
 		boolean f = true;
 		for (String s : signature) {
@@ -323,27 +396,9 @@ public class Dock implements Writable {
 		return localDir + localSep + dockingProperties.getReceptorFlexiblePart();
 	}
 
-	//TODO
-	@Override
-	public void write(DataOutput dataOutput) throws IOException {
-		client.write(dataOutput);
-		dockingProperties.write(dataOutput);
-		clusterProperties.write(dataOutput);
-	}
-
-	@Override
-	public void readFields(DataInput dataInput) throws IOException {
-		clusterProperties = new ClusterProperties();
-		client = new DockingClient();
-		dockingProperties = new DockingProperties();
-
-		client.readFields(dataInput);
-		dockingProperties.readFields(dataInput);
-		clusterProperties.readFields(dataInput);
-	}
-
 	private enum Pipeline {
 		PREPARE_GPF,
+		CONVERT_GPF,//TODO
 		AUTOGRID,
 		PREPARE_DPF,
 		AUTODOCK

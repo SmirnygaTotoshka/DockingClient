@@ -155,9 +155,8 @@ public class DockingProperties implements Writable {
     /**
      * @return путь к файлу рецептора в hdfs
      */
-    public String getReceptorPath()
-    {
-	return pathToFiles + "/" + receptor;
+    public String getReceptorPath() {
+	    return pathToFiles + "/" + receptor;
     }
 
     /**
@@ -189,4 +188,5 @@ public class DockingProperties implements Writable {
                 "dpfParameters:" + dpfParameters + ";" + "\n";
         return m;
     }
+
 }

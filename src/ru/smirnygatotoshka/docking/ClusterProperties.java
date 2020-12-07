@@ -39,7 +39,7 @@ public class ClusterProperties implements Writable {
         reader.close();
     }
 
-    ClusterProperties() {
+    protected ClusterProperties() {
 
     }
 
