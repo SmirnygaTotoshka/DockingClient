@@ -1,68 +1,46 @@
 package ru.smirnygatotoshka.docking;
 
-import ru.smirnygatotoshka.exception.TaskException;
-
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.logging.Level;
 
 
-public class DockingClient
-{
-    /**This string should be in start all servicing messages*/
-    public final String SERVICE = "SERVICE:";
-    private ArrayList<String> messages;
+public class DockingClient {
     private Socket socket;
-    private String nameSlave;
+    private String id;
+    private ClusterProperties clusterProperties;
+    private Log log;
 
-    public String getNameSlave() {
-        return nameSlave;
-    }
-    public static DockingClient createClient(Parameters parameters)
-    {
-        try {
-            String master = parameters.getMasterNode().split(":")[0];
-            return new DockingClient(InetAddress.getByName(master), 4445);
-        }
-        catch (Exception e) {
-            parameters.getLog().log(Level.WARNING,e.getMessage());//Write to local log only and only if can`t connect to server
-            return null;
-        }
+    public DockingClient(ClusterProperties clusterProperties, String id) throws IOException {
+        this.clusterProperties = clusterProperties;
+        log = new Log(clusterProperties.getWorkspaceLocalDir() + File.separator + id + "_client.log");
     }
 
-    private DockingClient(InetAddress serverAddress, int serverPort) throws Exception {
-        this.socket = new Socket(serverAddress, serverPort);
-        this.nameSlave = InetAddress.getLocalHost().getHostName();
-        this.messages = new ArrayList<>();
-    }
-    public void send(Parameters parameters)
-    {
-        try {
-            send();
+    public void send(Statistics.Counters counter, int num){
+        String increment = formIncrement(counter, num);
+        try{
+            this.socket = new Socket(InetAddress.getByName(clusterProperties.getIpAddressMasterNode()), 4445);
+            System.out.println("Client connect");
+            PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
+            out.println(increment);
+            out.flush();
+            out.close();
+            socket.close();
         }
-        catch (IOException | TaskException e)
-        {
-            parameters.getLog().log(Level.WARNING,e.getMessage());//Write to local log only and only if can`t connect to server
+        catch (IOException e) {
+            log.write("Can`t establish connection " + e.getMessage()+"\n");
+            log.write(increment+"\n");
         }
-    }
-    /**
-     * Send all messages to server. Removing this messages after sending.
-     * */
-    public void send() throws IOException, TaskException {
-        if (messages.isEmpty()) throw new TaskException("Trying send empty message");
-        PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
-        for (String i: messages)
-            out.println(i);
-        out.flush();
-        out.close();
-        if (!messages.removeAll(messages)) throw new TaskException("Cannot clear list of messages");
     }
 
-    public void addMessage(String msg)
-    {
-        messages.add(msg);
+
+    public String formIncrement(Statistics.Counters counter, int num) {
+        return counter.name() + "=" + num;
     }
+    public void close() throws IOException {
+        log.close();
+    }
+
 }

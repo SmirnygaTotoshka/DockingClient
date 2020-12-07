@@ -16,8 +16,9 @@
  *     Четвертый - расположение утилит MGLTools.<br>
  *     Пятый - Место рабочей папки, содержащей утилиты autodock,autogrid. И куда будут сохранятся локальные результаты.<br></h2>
  *<h2>В качестве выхода в выходной директории будут сохранены пути к DLG файлам, в файлах с именем part-xxxxx.</h2>
+ * //TODO - edit
  * @author SmirnygaTotoshka
- * @version 1.0
- * @date 01.08.2019
+ * @version 1.1
+ * @date 23.11.2020
  */
 package ru.smirnygatotoshka.docking;

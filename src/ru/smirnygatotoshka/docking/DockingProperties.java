@@ -1,195 +1,166 @@
 package ru.smirnygatotoshka.docking;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.File;
-import java.io.IOException;
-
 import org.apache.hadoop.io.Writable;
 
-import ru.smirnygatotoshka.exception.MovingDockingException;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
-public class DockingProperties implements Writable
-{
-
+/**
+ * Содержит описание подготовительных этапов для докинга
+ *
+ * @author SmirnygaTotoshka
+ */
+public class DockingProperties implements Writable {
+    //TODO - tests
+    /**
+     * Путь к файлам в hdfs
+     * */
     private String pathToFiles;
 
+    /**
+     * Имя файла рецептора. Должен иметь формат pdbqt
+     * */
     private String receptor;
 
-    private String ligand;
-
+    /**
+     * Имя файла гибкой части рецептора. Может быть не указано. Должен иметь формат pdbqt
+     * */
     private String receptorFlexiblePart;
 
-    private String startGPF;
+    /**
+     * Имя файла лиганда. Должен иметь формат pdbqt
+     * */
+    private String ligand;
 
-    private String finishGPF;
-    
-    private String optionalString;
+    /**
+     * Имя файла с параметрами autogrid. Будет сгенерирован. Должен иметь формат gpf
+     * */
+    private String gpfName;
 
-    private int divisionNumber;
+    /**
+     * Строка с опциональными параметрами скрипта prepare_gpf4.py.
+     * */
+    private String gpfParameters;
 
-    public DockingProperties(String receptor, String ligand, String receptor_flex_part, String startGPF,
-                             String finishGPF, int divisionNumber,String pathToFiles,String optionalString) throws MovingDockingException
-    {
-        set(receptor,ligand,receptor_flex_part,startGPF,finishGPF,divisionNumber,pathToFiles,
-                optionalString);
-    }
+    /**
+     * Имя файла с параметрами autodock. Будет сгенерирован. Должен иметь формат dpf
+     * */
+    private String dpfName;
 
-    public DockingProperties()
-    {
-        super();
-    }
+    /**
+     * Строка с опциональными параметрами скрипта prepare_dpf42.py.
+     * */
+    private String dpfParameters;
 
-    public void set(DockingProperties properties) throws MovingDockingException
-    {
-        set(properties.receptor,properties.ligand,properties.receptorFlexiblePart,properties.startGPF,properties.finishGPF,properties.divisionNumber,properties.pathToFiles,
-                properties.optionalString);
-    }
-
-    public void set(String receptor, String ligand, String receptor_flex_part, String startGPF,
-                         String finishGPF, int divisionNumber,String pathToFiles,String optionalString) throws MovingDockingException
-    {
-        if (!finishGPF.equals(startGPF) & divisionNumber == 1)
-            throw new MovingDockingException("Попытка запуска динамического докинга с неправильными настройками.");
-
-        this.receptor = receptor;
-        this.ligand = ligand;
-        this.receptorFlexiblePart = receptor_flex_part;
-
-        this.startGPF = startGPF;
-        this.finishGPF = finishGPF;
-
-        if (divisionNumber < 1)
-            this.divisionNumber = 1;
-        else
-            this.divisionNumber = divisionNumber;
-
+    public DockingProperties(String pathToFiles, String receptor, String receptorFlexiblePart, String ligand,
+                             String gpfName, String gpfParameters, String dpfName, String dpfParameters) {
         this.pathToFiles = pathToFiles;
-        this.optionalString = optionalString;
+        this.receptor = receptor;
+        this.receptorFlexiblePart = receptorFlexiblePart;
+        this.ligand = ligand;
+        this.gpfName = gpfName;
+        this.gpfParameters = gpfParameters;
+        this.dpfName = dpfName;
+        this.dpfParameters = dpfParameters;
     }
 
-    public String getPathToFiles()
-    {
+    DockingProperties() {
+        this.pathToFiles = "/";
+        this.receptor = "receptor.pdbqt";
+        this.receptorFlexiblePart = "receptorFlexiblePart.pqbqt";
+        this.ligand = "ligand.pdbqt";
+        this.gpfName = "gpfName.gpf";
+        this.gpfParameters = "";
+        this.dpfName = "dpfName.gpf";
+        this.dpfParameters = "";
+    }
+
+    public String getPathToFiles() {
         return pathToFiles;
     }
 
-    public void setPathToFiles(String pathToFiles)
-    {
-        this.pathToFiles = pathToFiles;
+    public String getReceptor() {
+        return receptor;
     }
 
-    public String getReceptor()
-    {
-	return receptor;
+    public String getReceptorFlexiblePart() {
+        return receptorFlexiblePart;
     }
 
-    public void setReceptor(String receptor)
-    {
-	this.receptor = receptor;
+    public String getLigand() {
+        return ligand;
     }
 
-    public String getLigand()
-    {
-	return ligand;
+    public String getGpfName() {
+        return gpfName;
     }
 
-    public void setLigand(String ligand)
-    {
-	this.ligand = ligand;
+    public String getGpfParameters() {
+        return gpfParameters;
     }
 
-    public String getReceptorFlexiblePart()
-    {
-	    return receptorFlexiblePart;
+    public String getDpfName() {
+        return dpfName;
     }
 
-    public void setReceptorFlexiblePart(String receptorFlexiblePart)
-    {
-	    this.receptorFlexiblePart = receptorFlexiblePart;
+    public String getDpfParameters() {
+        return dpfParameters;
     }
 
-    public String getStartGPF()
-    {
-	return startGPF;
-    }
-
-    public void setStartGPF(String startGPF)
-    {
-	this.startGPF = startGPF;
-    }
-
-    public String getFinishGPF()
-    {
-	return finishGPF;
-    }
-
-    public void setFinishGPF(String finishGPF)
-    {
-	this.finishGPF = finishGPF;
-    }
-
-    public int getDivisionNumber()
-    {
-	return divisionNumber;
-    }
-
-    public void setDivisionNumber(int l)
-    {
-	this.divisionNumber = l;
-    }
-
-    public String getOptionalString()
-    {
-        return optionalString;
-    }
-
-    public void setOptionalString(String optionalString)
-    {
-        this.optionalString = optionalString;
-    }
-
-    /**@return Возвращает идентификатор задания:рецептор_лиганд_гибкая часть рецептора_число делений*/
-    public String getId()
-    {
-	return receptor.replaceAll("\\.","_") + "_" + ligand.replaceAll("\\.","_")
-            + "_" + receptorFlexiblePart.replaceAll("\\.","_") + "_" + divisionNumber;
+    /**@return Возвращает идентификатор задания:рецептор_лиганд_гибкая часть рецептора_имя gpf*/
+    public String getId() {
+        String id = "";
+        try{
+            if (receptorFlexiblePart.contentEquals(""))
+                id =  receptor.substring(0, receptor.indexOf('.')) + "_" +
+                        ligand.substring(0, ligand.indexOf('.')) + "_None_" +
+                        gpfName.substring(0, gpfName.indexOf('.'));
+            else
+                id = receptor.substring(0, receptor.indexOf('.')) + "_" +
+                        ligand.substring(0, ligand.indexOf('.')) + "_" +
+                        receptorFlexiblePart.substring(0, receptorFlexiblePart.indexOf('.')) + "_" +
+                        gpfName.substring(0, gpfName.indexOf('.'));
+        }
+        catch (StringIndexOutOfBoundsException e) {
+            id = receptor + "_" + ligand + "_" + receptorFlexiblePart + "_" + gpfName;
+        }
+        return id;
     }
 
     @Override
-    public void readFields(DataInput arg0) throws IOException
-    {
-        receptor = arg0.readUTF();
-        ligand = arg0.readUTF();
-        receptorFlexiblePart = arg0.readUTF();
-        startGPF = arg0.readUTF();
-        finishGPF = arg0.readUTF();
-        divisionNumber = arg0.readInt();
+    public void readFields(DataInput arg0) throws IOException {
         pathToFiles = arg0.readUTF();
-        optionalString = arg0.readUTF();
-	
+        receptor = arg0.readUTF();
+        receptorFlexiblePart = arg0.readUTF();
+        ligand = arg0.readUTF();
+        gpfName = arg0.readUTF();
+        gpfParameters = arg0.readUTF();
+        dpfName = arg0.readUTF();
+        dpfParameters = arg0.readUTF();
     }
+
     @Override
-    public void write(DataOutput arg0) throws IOException
-    {
-        arg0.writeUTF(receptor);
-        arg0.writeUTF(ligand);
-        arg0.writeUTF(receptorFlexiblePart);
-        arg0.writeUTF(startGPF);
-        arg0.writeUTF(finishGPF);
-        arg0.writeInt(divisionNumber);
+    public void write(DataOutput arg0) throws IOException {
         arg0.writeUTF(pathToFiles);
-        arg0.writeUTF(optionalString);
+        arg0.writeUTF(receptor);
+        arg0.writeUTF(receptorFlexiblePart);
+        arg0.writeUTF(ligand);
+        arg0.writeUTF(gpfName);
+        arg0.writeUTF(gpfParameters);
+        arg0.writeUTF(dpfName);
+        arg0.writeUTF(dpfParameters);
     }
 
     /**
-     * @return путь к файлу рецептора
+     * @return путь к файлу рецептора в hdfs
      */
-    public String getReceptorPath()
-    {
-	return pathToFiles + "/" + receptor;
+    public String getReceptorPath() {
+	    return pathToFiles + "/" + receptor;
     }
+
     /**
-     * @return путь к файлу лиганда
+     * @return путь к файлу лиганда в hdfs
      */
     public String getLigandPath()
     {
@@ -197,40 +168,25 @@ public class DockingProperties implements Writable
     }
 
     /**
-     * @return путь к файлу гибкой части рецептора
+     * @return путь к файлу гибкой части рецептора в hdfs
      */
-    public String getReceptorFlexiblePartPath()
-    {
-	    if (receptorFlexiblePart.equals(""))
-	        return receptorFlexiblePart;
-        return  pathToFiles + "/" + receptorFlexiblePart;
-    }
-    /**
-     * @return путь к стартовому GPF
-     */
-    public String getStartGPFPath()
-    {
-	    return  pathToFiles + "/" + startGPF;
-    }
-    /**
-     * @return путь к конечному GPF
-     */
-    public String getFinishGPFPath()
-    {
-	return  pathToFiles + "/" + finishGPF;
+    public String getReceptorFlexiblePartPath() {
+        if (receptorFlexiblePart.contentEquals(""))
+            return receptorFlexiblePart;
+        return pathToFiles + "/" + receptorFlexiblePart;
     }
 
     @Override
     public String toString() {
-        String m = "DockingProperties:" + getId() +";"+"\n" +
-                    "Receptor:" + receptor + ";"+"\n"+
-                    "Ligand:" + ligand + ";"+"\n"+
-                    "ReceptorFlexPart:" + receptorFlexiblePart + ";"+"\n" +
-                    "Start:" + startGPF + ";"+"\n" +
-                    "Finish:" + finishGPF + ";"+"\n" +
-                    "Divisions:" + divisionNumber + ";"+"\n" +
-                    "path to files:" + pathToFiles + ";"+"\n" +
-                    "optional:" + optionalString + ";"+"\n" ;
+        String m = "DockingProperties:" + getId() + ";" + "\n" +
+                "Receptor:" + receptor + ";" + "\n" +
+                "ReceptorFlexPart:" + receptorFlexiblePart + ";" + "\n" +
+                "Ligand:" + ligand + ";" + "\n" +
+                "gpfName:" + gpfName + ";" + "\n" +
+                "gpfParameters:" + gpfParameters + ";" + "\n" +
+                "dpfName:" + dpfName + ";" + "\n" +
+                "dpfParameters:" + dpfParameters + ";" + "\n";
         return m;
     }
+
 }
