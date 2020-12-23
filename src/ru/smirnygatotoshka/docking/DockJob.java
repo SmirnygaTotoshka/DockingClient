@@ -204,7 +204,7 @@ public class DockJob extends Configured implements Tool {
 				ArrayList<String> lines = FileUtils.readFile(pathToDLG, hdfs);
 				int i = -1;
 				boolean findIt = false;
-				for (int j = lines.size() - 1; j >= 0; j--) {
+				for (int j = 0; j < lines.size(); j++) {
 					if (lines.get(j).contains(START_HISTOGRAM))
 						findIt = true;
 					if (findIt)

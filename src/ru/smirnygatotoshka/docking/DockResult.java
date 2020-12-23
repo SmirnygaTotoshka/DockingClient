@@ -7,6 +7,8 @@ import org.apache.hadoop.io.WritableComparable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Класс, содержащий информацию о выполнении докинга. Служит результатом Map и ключом Reduce.
@@ -22,6 +24,15 @@ public class DockResult implements WritableComparable<LongWritable> {
     private boolean success;
     private String causeFail;
     private LongWritable key;
+    private String node;
+
+    public String getNode() {
+        return node;
+    }
+
+    public void setNode(String node) {
+        this.node = node;
+    }
 
     public String getId() {
         return id;
@@ -75,6 +86,11 @@ public class DockResult implements WritableComparable<LongWritable> {
         this.energy = -1000.001F;
         this.success = true;
         this.causeFail = "Unknown status";
+        try {
+            this.node = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            this.node = "Unknown";
+        }
     }
 
     public DockResult(){
@@ -84,6 +100,8 @@ public class DockResult implements WritableComparable<LongWritable> {
         this.energy = -1000.001F;
         this.success = true;
         this.causeFail = "Unknown status";
+        this.node = "Unknown";
+
     }
     @Override
     public int compareTo(LongWritable o) {
@@ -122,6 +140,7 @@ public class DockResult implements WritableComparable<LongWritable> {
         causeFail = dataInput.readUTF();
         key = new LongWritable();
         key.readFields(dataInput);
+        node = dataInput.readUTF();
     }
     @Override
     public void write(DataOutput dataOutput) throws IOException {
@@ -131,10 +150,11 @@ public class DockResult implements WritableComparable<LongWritable> {
         dataOutput.writeFloat(energy);
         dataOutput.writeUTF(causeFail);
         key.write(dataOutput);
+        dataOutput.writeUTF(node);
     }
     @Override
     public String toString() {
-        return id + "\t" + pathDLGinHDFS + "\t" + success + "\t" + energy + "\t" + causeFail;
+        return id + "\t" + pathDLGinHDFS + "\t" + success + "\t" + energy + "\t" + causeFail + "\t" + node;
     }
 
     /**

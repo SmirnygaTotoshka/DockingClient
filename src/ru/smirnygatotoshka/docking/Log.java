@@ -3,6 +3,7 @@ package ru.smirnygatotoshka.docking;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class Log {
@@ -44,4 +45,11 @@ public class Log {
     public void close() throws IOException {
         writer.close();
     }
+    public void redirect(InputStream s) throws IOException {
+        int c;
+        while ((c = s.read()) != -1) {
+            writer.write((char) c);
+        }
+    }
+
 }

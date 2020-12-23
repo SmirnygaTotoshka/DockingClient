@@ -92,23 +92,26 @@ public class Dock {
 							"prepare_gpf.py" +
 							" -l " + getLigandLocalPath() +
 							" -r " + getReceptorLocalPath() + flex +
-							" -o " + getGPFLocalPath() +
-							dockingProperties.getGpfParameters();
+							" -o " + getGPFLocalPath() + " " +
+							dockingProperties.getGpfParameters() +
+							" -v";
 				else
 					cmd = clusterProperties.getPathToMGLTools() + localSep + "python " + getScriptsPath() +
 						"prepare_gpf.py" +
 						" -l " + getLigandLocalPath() +
 						" -r " + getReceptorLocalPath() + flex +
-						" -o " + getGPFLocalPath() +
-						dockingProperties.getGpfParameters();
+						" -o " + getGPFLocalPath() + " " +
+						dockingProperties.getGpfParameters() +
+						" -v";
 				break;
 			case CONVERT_GPF:
 					cmd = "python " + getScriptsPath() +
 						"gpf3_to_gpf4.py" +
-						" -s " + getGPFLocalPath() +
+						" -s " + getGPFLocalPath().substring(0, getGPFLocalPath().indexOf('.')) +
 						" -l " + getLigandLocalPath() +
 						" -r " + getReceptorLocalPath() +
-						" -o " + getGPFLocalPath();
+						" -o " + getGPFLocalPath() +
+						" -v";
 				break;
 			case AUTOGRID:
 				if (localSep.contentEquals("/"))// it mean node on Unix OS
@@ -123,15 +126,17 @@ public class Dock {
 							"prepare_dpf4.py" +
 							" -l " + getLigandLocalPath() +
 							" -r " + getReceptorLocalPath() + flex +
-							" -o " + getDPFLocalPath() +
-							dockingProperties.getDpfParameters();
+							" -o " + getDPFLocalPath() + " " +
+							dockingProperties.getDpfParameters() +
+							" -v";
 				else
 					cmd = clusterProperties.getPathToMGLTools() + localSep + "python " + getScriptsPath() +
 						"prepare_dpf4.py" +
 						" -l " + getLigandLocalPath() +
 						" -r " + getReceptorLocalPath() + flex +
-						" -o " + getDPFLocalPath() +
-						dockingProperties.getDpfParameters();
+						" -o " + getDPFLocalPath() + " " +
+						dockingProperties.getDpfParameters() +
+						" -v";
 				break;
 			case AUTODOCK:
 				if (localSep.contentEquals("/"))// it mean node on Unix OS
@@ -183,15 +188,15 @@ public class Dock {
 			} else throw new TaskException(errorMessage);
 		}
 		catch (TaskException e) {
-			dockResult.fail("TaskException" + e.getMessage());
-			msg.add("TaskException" + e.getMessage());
+			dockResult.fail("TaskException:" + e.getMessage());
+			msg.add("TaskException:" + e.getMessage());
 		}
 		catch (IOException e){
 			dockResult.fail("IOException: " + e.getMessage());
 			msg.add("IOException: " + e.getMessage());
 		}
 		finally {
-			/*try {
+			try {
 				Path wd = new Path(localDir);
 				if (FileUtils.exist(wd,local))
 					FileUtils.deleteFolder(wd, local);
@@ -205,7 +210,7 @@ public class Dock {
 			if (!errorMessage.isEmpty()) {
 				msg.add(dockingProperties.toString());
 				msg.add(errorMessage);
-            }*/
+            }
 			log.writeRecord(msg);
 			try {
 				log.close();
@@ -240,7 +245,7 @@ public class Dock {
 				ArrayList<String> lines = FileUtils.readFile(getDPFLocalPath(), local);
 				if (lines.size() == 0)
 					return false;
-				return hasSignature(lines, DPF_signature);
+				return true;
 			} catch (IOException e) {
 				return false;
 			}
@@ -277,7 +282,7 @@ public class Dock {
 				ArrayList<String> lines = FileUtils.readFile(getGPFLocalPath(), local);
 				if (lines.size() == 0)
 					return false;
-				return hasSignature(lines, GPF_signature);
+				return true;
 			} catch (IOException e) {
 				return false;
 			}
@@ -292,13 +297,13 @@ public class Dock {
 				ArrayList<String> lines = FileUtils.readFile(getGPFLocalPath(), local);
 				if (lines.size() == 0)
 					return false;
-				return hasSignature(lines, GPF_signature);
+				return true;
 			} catch (IOException e) {
 				return false;
 			}
 		}
 	}
-	private boolean hasSignature(ArrayList<String> lines, String[] signature) {
+	/*private boolean hasSignature(ArrayList<String> lines, String[] signature) {
 		boolean f = true;
 		for (String s : signature) {
 			f = false;
@@ -311,7 +316,7 @@ public class Dock {
 			if (!f) break;
 		}
 		return f;
-	}
+	}*/
 
 	/**
 	 * Редактирвание файлов GPF и DPF. Прописывание полного пути к файлам.
@@ -348,8 +353,10 @@ public class Dock {
 	private int launchCommand(String cmd) {
 		try {
 			Process process = runtime.exec(cmd);
+			log.redirect(process.getInputStream());
 			return process.waitFor();
-		} catch (InterruptedException | IOException e) {
+		}
+		catch (InterruptedException | IOException e) {
 			this.errorMessage = e.getMessage();
 			return -1001;
 		}

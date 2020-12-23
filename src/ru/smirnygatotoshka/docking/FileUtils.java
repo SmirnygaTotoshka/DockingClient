@@ -1,9 +1,10 @@
 package ru.smirnygatotoshka.docking;
 
-import org.apache.hadoop.fs.*;
+import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 
-import java.io.EOFException;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -21,23 +22,13 @@ public final class FileUtils {
 	}*/
 
     public static ArrayList<String> readFile(String pathToFile, FileSystem sys) throws IOException {
-        FSDataInputStream reader = sys.open(new Path(pathToFile));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(sys.open(new Path(pathToFile))));
         ArrayList<String> lines = new ArrayList<>();
         String line = "";
-        char t;
-        try{
-            while (true){
-                t = reader.readChar();
-                line += Character.toString(t);
-                if (t == '\n'){
-                    lines.add(line);
-                    line = "";
-                }
-            }
+        while ((line = reader.readLine()) != null){
+                lines.add(line);
         }
-        catch (EOFException e){
-            reader.close();
-        }
+        reader.close();
         return lines;
     }
 
@@ -52,9 +43,9 @@ public final class FileUtils {
 	}*/
 
     public static void writeFile(ArrayList<String> lines, String pathToFile, FileSystem sys) throws IOException {
-        FSDataOutputStream writer = sys.create(new Path(pathToFile));
-        for (String line : lines) {
-            writer.writeChars(line);
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(sys.create(new Path(pathToFile))));
+        for (String l : lines) {
+            writer.write(l+"\n");
         }
         writer.close();
     }
@@ -62,7 +53,7 @@ public final class FileUtils {
     public static void copy(FileSystem srcFS, String src, FileSystem dstFS, String dst) throws IOException {
         ArrayList<String> lines = readFile(src, srcFS);
         writeFile(lines, dst, dstFS);
-        FileUtil.copy(srcFS,new Path(src),dstFS,new Path(dst),false,true,srcFS.getConf());
+        //FileUtil.copy(srcFS,new Path(src),dstFS,new Path(dst),false,true,srcFS.getConf());
     }
 
     public static void copy(String src, String dst, FileSystem sys) throws IllegalArgumentException, IOException {

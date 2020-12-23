@@ -4,7 +4,7 @@ import java.text.DecimalFormat;
 
 public class Statistics {
 
-    private int numTasks;
+    private volatile int numTasks;
 
     public int getNumTasks() {
         return numTasks;
@@ -40,6 +40,7 @@ public class Statistics {
         executeFail = 0;
         analyzeFail = 0;
         success = 0;
+        numTasks = 0;
     }
 
 

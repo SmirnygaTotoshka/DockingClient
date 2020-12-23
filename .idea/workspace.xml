@@ -10,12 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cec54ce2-7521-4ebe-8f26-06fbe644a3c6" name="Plans" comment="Некоторые тесты. Нужны тесты на кластере.">
-      <change afterPath="$PROJECT_DIR$/log.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/log.txt.lck" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Log.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/test/DockingClientTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DockingClient.iml" beforeDir="false" afterPath="$PROJECT_DIR$/DockingClient.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/log.txt.lck" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/DockingClient_jar/DockingClient.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/DockingClient_jar/DockingClient.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Dock$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Dock$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Dock$Pipeline.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Dock$Pipeline.class" afterDir="false" />
@@ -26,26 +23,13 @@
       <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockingClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockingClient.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/FileUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/FileUtils.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Statistics$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Statistics$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Statistics$Counters.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Statistics$Counters.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Statistics.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Statistics.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/exception/GPFError.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/exception/MovingDockingException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/exception/TaskException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/ClusterProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/ClusterProperties.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Dock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Dock.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingProperties.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/FileUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Log.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Statistics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Statistics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/exception/GPFError.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/exception/MovingDockingException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/exception/TaskException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/TaskException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/exception/package-info.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/test/DockTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/test/DockTest.java" afterDir="false" />
     </list>
     <list id="2d452110-0e54-4c17-a803-f55666bd61b8" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -216,10 +200,10 @@
     </configuration>
     <list>
       <item itemvalue="Application.Main" />
-      <item itemvalue="JUnit.DockingClientTest.formIncrement" />
-      <item itemvalue="JUnit.DockingClientTest.setupLog" />
       <item itemvalue="JUnit.DockResultTest" />
       <item itemvalue="JUnit.DockTest.splitProperties" />
+      <item itemvalue="JUnit.DockingClientTest.formIncrement" />
+      <item itemvalue="JUnit.DockingClientTest.setupLog" />
       <item itemvalue="JUnit.FileUtilsTest.copy" />
     </list>
     <recent_temporary>
@@ -317,7 +301,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606868210290</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Некоторые тесты. Нужны тесты на кластере.">
+      <created>1607335420233</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1607335420233</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -369,10 +360,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="331" y="117" key="#com.intellij.ide.fileTemplates.ui.ConfigureTemplatesDialog/0.0.1366.728@0.0.1366.728" timestamp="1606001954958" />
-    <state x="488" y="84" key="#com.intellij.ide.util.MemberChooser" timestamp="1607323719269">
+    <state x="488" y="84" key="#com.intellij.ide.util.MemberChooser" timestamp="1607476842665">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="488" y="84" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1607323719269" />
+    <state x="488" y="84" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1607476842665" />
     <state x="413" y="146" key="#com.intellij.ide.util.PackageChooserDialog" timestamp="1606002056424">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -425,22 +416,22 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="521" y="266" width="347" height="195" key="Github.CreateGistDialog/0.0.1366.728@0.0.1366.728" timestamp="1606914002203" />
-    <state width="1323" height="172" key="GridCell.Tab.0.bottom" timestamp="1607321341473">
+    <state width="1323" height="172" key="GridCell.Tab.0.bottom" timestamp="1607339468476">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="172" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1607321341473" />
-    <state width="1323" height="172" key="GridCell.Tab.0.center" timestamp="1607321341472">
+    <state width="1323" height="172" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1607339468476" />
+    <state width="1323" height="172" key="GridCell.Tab.0.center" timestamp="1607339468474">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="172" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1607321341472" />
-    <state width="1323" height="172" key="GridCell.Tab.0.left" timestamp="1607321341472">
+    <state width="1323" height="172" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1607339468474" />
+    <state width="1323" height="172" key="GridCell.Tab.0.left" timestamp="1607339468474">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="172" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1607321341472" />
-    <state width="1323" height="172" key="GridCell.Tab.0.right" timestamp="1607321341473">
+    <state width="1323" height="172" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1607339468474" />
+    <state width="1323" height="172" key="GridCell.Tab.0.right" timestamp="1607339468474">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="172" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1607321341473" />
+    <state width="1323" height="172" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1607339468474" />
     <state width="1323" height="218" key="GridCell.Tab.1.bottom" timestamp="1606959853399">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -465,14 +456,18 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="438" y="213" key="SimpleOpenTaskDialog/0.0.1366.728@0.0.1366.728" timestamp="1606000140714" />
-    <state x="92" y="92" width="1182" height="544" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1607329491929">
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1607337090851">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="92" y="92" width="1182" height="544" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1366.728@0.0.1366.728" timestamp="1607329491929" />
-    <state x="391" y="193" key="com.intellij.ide.util.TipDialog" timestamp="1607317515990">
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1607337090851" />
+    <state x="92" y="92" width="1182" height="544" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1607474569531">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="391" y="193" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1607317515990" />
+    <state x="92" y="92" width="1182" height="544" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1366.728@0.0.1366.728" timestamp="1607474569531" />
+    <state x="391" y="193" key="com.intellij.ide.util.TipDialog" timestamp="1607618207517">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="391" y="193" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1607618207517" />
     <state x="387" y="266" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1606002132287">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -485,10 +480,18 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="454" y="85" key="com.intellij.testIntegration.createTest.CreateTestDialog/0.0.1366.728@0.0.1366.728" timestamp="1607320511458" />
-    <state x="65" y="69" key="new project wizard" timestamp="1607122776719">
+    <state x="467" y="244" key="git4idea.rebase.GitRebaseDialog" timestamp="1607336993202">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="65" y="69" key="new project wizard/0.0.1366.728@0.0.1366.728" timestamp="1607122776719" />
+    <state x="467" y="244" key="git4idea.rebase.GitRebaseDialog/0.0.1366.728@0.0.1366.728" timestamp="1607336993202" />
+    <state x="449" y="222" key="git4idea.ui.GitTagDialog" timestamp="1607337220758">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="449" y="222" key="git4idea.ui.GitTagDialog/0.0.1366.728@0.0.1366.728" timestamp="1607337220758" />
+    <state x="65" y="0" key="new project wizard" timestamp="1607637522033">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="65" y="0" key="new project wizard/0.0.1366.728@0.0.1366.728" timestamp="1607637522033" />
     <state x="339" y="162" width="672" height="677" key="run.anything.popup" timestamp="1606864340068">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -518,27 +521,27 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java</url>
-          <line>49</line>
+          <line>48</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java</url>
-          <line>43</line>
+          <line>42</line>
           <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java</url>
-          <line>44</line>
+          <line>43</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java</url>
-          <line>56</line>
+          <line>55</line>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java</url>
-          <line>58</line>
+          <line>57</line>
           <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
