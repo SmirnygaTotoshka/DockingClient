@@ -51,6 +51,7 @@ public class DockJob extends Configured implements Tool {
 		jobConf.set(ClusterProperties.WORKSPACE, cluster.getWorkspaceLocalDir());
 		jobConf.set(ClusterProperties.MGLTOOLS, cluster.getPathToMGLTools());
 		jobConf.set(ClusterProperties.HOST, cluster.getIpAddressMasterNode());
+		jobConf.set(ClusterProperties.PORT, Integer.toString(cluster.getPort()));
 		jobConf.set(ClusterProperties.NUM_MAPPERS, cluster.getMapperNumber());
 
 		jobConf.setJobName(cluster.getTaskName());
@@ -62,6 +63,7 @@ public class DockJob extends Configured implements Tool {
 		jobConf.setOutputValueClass(Text.class);
 		jobConf.setInputFormat(TextInputFormat.class);
 		jobConf.setNumMapTasks(Integer.parseInt(cluster.getMapperNumber()));
+		jobConf.setNumReduceTasks(Integer.parseInt(cluster.getMapperNumber()));
 		jobConf.set("mapreduce.task.timeout", "0");
         Statistics.getInstance().setNumTasks(FileUtils.readFile(arg0[0],FileSystem.get(jobConf)).size());
         job = JobClient.runJob(jobConf);
@@ -140,7 +142,7 @@ public class DockJob extends Configured implements Tool {
 		public void reduce(Text text, Iterator<DockResult> iterator, OutputCollector<LongWritable, Text> outputCollector, Reporter reporter) throws IOException {
 			while (iterator.hasNext()) {
 				DockResult result = iterator.next();
-				if (result.isSuccess()) {
+				if (result.isSuccess() && error_message.contentEquals("")) {
 					if (error_message.contentEquals("")) {
 						if (hasSuccessDLG(result.getPathDLGinHDFS())) {
 							float energy = parseHistogram(result.getPathDLGinHDFS());

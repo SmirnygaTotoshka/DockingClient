@@ -17,7 +17,7 @@ public class DockingServer extends Thread{
     private Statistics statistics = Statistics.getInstance();
 
     public DockingServer(ClusterProperties clusterProperties) throws IOException {
-        this.server = new ServerSocket(4445, 1, InetAddress.getByName(clusterProperties.getIpAddressMasterNode()));
+        this.server = new ServerSocket(clusterProperties.getPort(), 1, InetAddress.getByName(clusterProperties.getIpAddressMasterNode()));
     }
 
     @Override

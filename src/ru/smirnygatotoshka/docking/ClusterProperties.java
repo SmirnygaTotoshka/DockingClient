@@ -17,6 +17,7 @@ public class ClusterProperties implements Writable {
     public static final String WORKSPACE = "workspaceLocalDir";
     public static final String MGLTOOLS = "mgltoolsDir";
     public static final String HOST = "ipMaster";
+    public static final String PORT = "port";
     public static final String NUM_MAPPERS = "nMap";
 
     private String outputPath;
@@ -24,6 +25,7 @@ public class ClusterProperties implements Writable {
     private String workspaceLocalDir;
     private String pathToMGLTools;
     private String ipAddressMasterNode;
+    private int port;
     private String mapperNumber;
     private JobConf jobConf;
 
@@ -34,6 +36,7 @@ public class ClusterProperties implements Writable {
         this.workspaceLocalDir = reader.readLine();
         this.pathToMGLTools = reader.readLine();
         this.ipAddressMasterNode = reader.readLine();
+        this.port = Integer.parseInt(reader.readLine());
         this.mapperNumber = reader.readLine();
         this.jobConf = new JobConf(conf, DockJob.class);
         reader.close();
@@ -53,6 +56,7 @@ public class ClusterProperties implements Writable {
         this.workspaceLocalDir = jobConf.get(WORKSPACE);
         this.pathToMGLTools = jobConf.get(MGLTOOLS);
         this.ipAddressMasterNode = jobConf.get(HOST);
+        this.port = Integer.parseInt(jobConf.get(PORT));
         this.mapperNumber = jobConf.get(NUM_MAPPERS);
         this.jobConf = jobConf;
     }
@@ -88,8 +92,13 @@ public class ClusterProperties implements Writable {
         dataOutput.writeUTF(workspaceLocalDir);
         dataOutput.writeUTF(pathToMGLTools);
         dataOutput.writeUTF(ipAddressMasterNode);
+        dataOutput.writeInt(port);
         dataOutput.writeUTF(mapperNumber);
         jobConf.write(dataOutput);
+    }
+
+    public int getPort() {
+        return port;
     }
 
     @Override
@@ -99,6 +108,7 @@ public class ClusterProperties implements Writable {
         this.workspaceLocalDir = dataInput.readUTF();
         this.pathToMGLTools = dataInput.readUTF();
         this.ipAddressMasterNode = dataInput.readUTF();
+        this.port = dataInput.readInt();
         this.mapperNumber = dataInput.readUTF();
         jobConf = new JobConf();
         jobConf.readFields(dataInput);
