@@ -104,7 +104,6 @@ public class DockJob extends Configured implements Tool {
 				reporter.incrCounter(Statistics.Counters.EXECUTION_FAIL,1);
 			}
 			if (FileUtils.exist(new Path(result.getPathDLGinHDFS()),FileSystem.get(clusterProperties.getJobConf()))) {
-				System.out.println(result.toString());
 				outputCollector.collect(new Text(result.getId()), result);
 				client.send(Statistics.Counters.ALL, 1);
 				reporter.incrCounter(Statistics.Counters.ALL, 1);
@@ -176,6 +175,7 @@ public class DockJob extends Configured implements Tool {
 						reporter.incrCounter(Statistics.Counters.ANALYZE_FAIL,1);
 					}
 				}
+				System.out.println(result.toString());
 				outputCollector.collect(result.getKey(), result.getText());
 			}
 		}
