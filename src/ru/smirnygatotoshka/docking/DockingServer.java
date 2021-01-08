@@ -8,6 +8,8 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -79,7 +81,7 @@ public class DockingServer extends Thread{
 
     private void printDockingProgress(){
         synchronized (statistics) {
-            String bar = "\rExecution[";
+            String bar = getTime() + "\tExecution[";
             try {
                 float progress = (float)statistics.getAll() / statistics.getNumTasks() * 100;
                 int symbols = Math.round(progress / 5);
@@ -98,7 +100,7 @@ public class DockingServer extends Thread{
 
     private void printAnalyzeProgress(){
         synchronized (statistics) {
-            String bar = "\rAnalyze[";
+            String bar = getTime() + "\tAnalyze[";
             try {
                 float progress = (statistics.getExecuteFail() + statistics.getSuccess() + statistics.getAnalyzeFail()) / (float)statistics.getNumTasks() * 100;
                 int symbols = Math.round(progress / 5);
@@ -116,4 +118,10 @@ public class DockingServer extends Thread{
             }
         }
     }
+    private String getTime(){
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+        Date start = new Date(System.currentTimeMillis());
+        return format.format(start);
+    }
+
 }
