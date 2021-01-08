@@ -81,7 +81,7 @@ public class DockingServer extends Thread{
         synchronized (statistics) {
             String bar = "\rExecution[";
             try {
-                float progress = statistics.getAll() / statistics.getNumTasks() * 100;
+                float progress = (float)statistics.getAll() / statistics.getNumTasks() * 100;
                 int symbols = Math.round(progress / 5);
                 for (int i = 0; i <= symbols; i++) {
                     bar += "+";
@@ -100,13 +100,13 @@ public class DockingServer extends Thread{
         synchronized (statistics) {
             String bar = "\rAnalyze[";
             try {
-                float progress = (statistics.getExecuteFail() + statistics.getSuccess() + statistics.getAnalyzeFail()) / statistics.getNumTasks() * 100;
+                float progress = (statistics.getExecuteFail() + statistics.getSuccess() + statistics.getAnalyzeFail()) / (float)statistics.getNumTasks() * 100;
                 int symbols = Math.round(progress / 5);
                 for (int i = 0; i <= symbols; i++) {
                     bar += "+";
                 }
-                int success_procent = Math.round(statistics.getSuccess() / statistics.getNumTasks() * 100);
-                int fail_procent = Math.round((statistics.getExecuteFail() + statistics.getAnalyzeFail()) / statistics.getNumTasks() * 100);
+                int success_procent = Math.round(statistics.getSuccess() / (float) statistics.getNumTasks() * 100);
+                int fail_procent = Math.round((statistics.getExecuteFail() + statistics.getAnalyzeFail()) / (float)statistics.getNumTasks() * 100);
                 bar += "]\t" + progress + "%\t" + "Успешно = " + success_procent + "\tПровалено = " + fail_procent;
                 System.out.println(bar);
             }

@@ -99,14 +99,16 @@ public class DockJob extends Configured implements Tool {
 		public void map(LongWritable id, Text line, OutputCollector<Text, DockResult> outputCollector, Reporter reporter) throws IOException {
 			Dock d = new Dock(line, clusterProperties, id);
 			DockResult result = d.launch();
-            System.out.println(result.toString());
-            outputCollector.collect(new Text(result.getId()), result);
 			if (!result.isSuccess()) {
 				client.send(Statistics.Counters.EXECUTION_FAIL, 1);
 				reporter.incrCounter(Statistics.Counters.EXECUTION_FAIL,1);
 			}
-			client.send(Statistics.Counters.ALL, 1);
-			reporter.incrCounter(Statistics.Counters.ALL,1);
+			if (FileUtils.exist(new Path(result.getPathDLGinHDFS()),FileSystem.get(clusterProperties.getJobConf()))) {
+				System.out.println(result.toString());
+				outputCollector.collect(new Text(result.getId()), result);
+				client.send(Statistics.Counters.ALL, 1);
+				reporter.incrCounter(Statistics.Counters.ALL, 1);
+			}
 			client.close();
 		}
 	}
