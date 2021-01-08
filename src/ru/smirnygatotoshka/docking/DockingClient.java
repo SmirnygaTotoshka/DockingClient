@@ -22,7 +22,6 @@ public class DockingClient {
         String increment = formIncrement(counter, num);
         try{
             this.socket = new Socket(InetAddress.getByName(clusterProperties.getIpAddressMasterNode()), clusterProperties.getPort());
-            System.out.println("Client connect");
             PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
             out.println(increment);
             out.flush();

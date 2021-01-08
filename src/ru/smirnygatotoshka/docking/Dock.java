@@ -213,6 +213,12 @@ public class Dock {
             }
 			log.writeRecord(msg);
 			try {
+				String s = key.toString() + "\t" + dockingProperties.getId() + "\t";
+				if (FileUtils.exist(new Path(dockResult.getPathDLGinHDFS()),hdfs))
+					s += "has DLG";
+				else
+					s += "not DLG";
+				System.out.println(s);
 				log.close();
 			} catch (IOException e) {
 				e.printStackTrace();
