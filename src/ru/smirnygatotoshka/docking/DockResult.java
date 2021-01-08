@@ -23,6 +23,7 @@ public class DockResult implements WritableComparable<LongWritable> {
     private float energy;
     private boolean success;
     private String causeFail;
+    //Из идентификатора для мап-таск(метод мап - 1 параметр)
     private LongWritable key;
     private String node;
 
@@ -74,10 +75,6 @@ public class DockResult implements WritableComparable<LongWritable> {
         this.key = key;
     }
 
-    /**
-     * Random key for comparing. From zero to 2<sup>30</sup>
-     */
-
 
     public DockResult(String id, String pathToHDFS, LongWritable key) {
         this.id = id;
@@ -112,7 +109,7 @@ public class DockResult implements WritableComparable<LongWritable> {
 
     public void fail(String cause) {
         success = false;
-        energy = -100000F;//TODO - Warning dont use static constant
+        energy = -100000F;//Warning dont use static constant
         causeFail = cause;
     }
 

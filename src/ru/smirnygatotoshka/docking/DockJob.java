@@ -74,7 +74,7 @@ public class DockJob extends Configured implements Tool {
 	/**
 	 * First argument - dock id, type Text
 	 * Second argument - dock, type Dock
-	 * Third argument - dock id, type Text //TODO
+	 * Third argument - dock id, type Text
 	 * Fourth argument - docking result , type DockResult
 	 *
 	 * @author SmirnygaTotoshka
@@ -114,8 +114,8 @@ public class DockJob extends Configured implements Tool {
 	/**
 	 * First argument - dock id, type Text
 	 * * Second argument - dock result without success and energy in normal, type Dock result
-	 * * Third argument - dock id, type Text TODO
-	 * * Fourth argument - path to dlg file in hdfs, type Text
+	 * * Third argument - dock id, type LongWritable
+	 * * Fourth argument - full dock result, type Text
 	 *
 	 * @author SmirnygaTotoshka
 	 */

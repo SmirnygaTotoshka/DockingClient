@@ -11,7 +11,8 @@ import java.io.*;
  * @author SmirnygaTotoshka
  * */
 public class ClusterProperties implements Writable {
-//TODO - tests
+    /** Константы-ключи, по которым восстанавливается экземпляр объекта на узлах из JobConf*/
+
     public static final String OUTPUT = "outputDir";
     public static final String NAME = "nameTask";
     public static final String WORKSPACE = "workspaceLocalDir";
@@ -20,15 +21,26 @@ public class ClusterProperties implements Writable {
     public static final String PORT = "port";
     public static final String NUM_MAPPERS = "nMap";
 
+    /**Выходная папка в hdfs*/
     private String outputPath;
+    /**Имя задачи*/
     private String taskName;
+    /**Локальная рабочая папка. На всех узлах должен быть одинаковый путь.*/
     private String workspaceLocalDir;
+    /**Путь к скриптам MGLTools. На всех узлах должен быть одинаковый путь.*/
     private String pathToMGLTools;
+    /**Адрес мастерского узла, на котором запущен информационный сервер
+     * @see DockingServer*/
     private String ipAddressMasterNode;
+    /**Порт информационного сервера*/
     private int port;
+    /**Число map tasks*/
     private String mapperNumber;
-    private JobConf jobConf;
 
+    private JobConf jobConf;
+    /**
+     * Конструткор для создания экземляра при запуске программы из файла-конфига на мастере
+     * */
     public ClusterProperties(String pathToConfig, Configuration conf) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(pathToConfig));
         this.outputPath = reader.readLine();
@@ -42,14 +54,13 @@ public class ClusterProperties implements Writable {
         reader.close();
     }
 
-    protected ClusterProperties() {
-
-    }
 
     public JobConf getJobConf() {
         return jobConf;
     }
-
+    /**
+     * Конструктор для восстановления объекта из JobConf
+     * */
     public ClusterProperties(JobConf jobConf){
         this.outputPath = jobConf.get(OUTPUT);
         this.taskName = jobConf.get(NAME);

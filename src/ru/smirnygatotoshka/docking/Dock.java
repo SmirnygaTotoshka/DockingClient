@@ -8,14 +8,28 @@ import org.apache.hadoop.io.Text;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
+ * Класс, содержащий основную логику приложения.
+ * Запуск необходимых скриптов для докинга в Autodock.
+ * Последовательность описана в
+ * @see Pipeline
+ * Требования: Ubuntu, на всех узлах должен быть установлен autodock4,autogrid4, должна быть папка с MGLTools
  * @author SmirnygaTotoshka
- * TODO - не предназначен для запуска на windows
- *
+ * Не предназначен для запуска на windows
  */
 public class Dock {
+
+	private enum Pipeline {
+		PREPARE_GPF,
+		CONVERT_GPF,
+		AUTOGRID,
+		PREPARE_DPF,
+		AUTODOCK
+	}
 
 	private final String[] GPF_signature = new String[]{"gridfld", "receptor", "map", "elecmap", "dsolvmap"};
 	private final String[] DPF_signature = new String[]{"fld", "move", "map", "elecmap", "desolvmap"};
@@ -32,9 +46,7 @@ public class Dock {
 	private FileSystem local, hdfs;
 	private Log log;
 
-	/**
-	 * Парсит строку из файла с описанием задач
-	 */
+
 	public Dock(Text line, ClusterProperties clusterProp, LongWritable key) {
 
 		this.dockingProperties = splitProperties(line);
@@ -63,10 +75,12 @@ public class Dock {
 	}
 
 	public Dock() {
-		//for tests TODO - delete
+		//for tests
 	}
-//TODO - make private
-	public DockingProperties splitProperties(Text line){
+	/**
+	 * Парсит строку из файла с описанием задач
+	 */
+	private DockingProperties splitProperties(Text line){
 		String[] description = line.toString().trim().split(";");
 
 		String path = description[0];
@@ -81,6 +95,77 @@ public class Dock {
 		return new DockingProperties(path, r, rFlex, lig, gpfName, gpfParam, dpfName, dpfParam);
 	}
 
+	/**
+	 * start on local node pipe of scripts
+	 * 1) prepare_gpf4.py
+	 * 2) gpf3_to_gpf4.py
+	 * 2) autogrid4
+	 * 3) prepare_dpf42.py
+	 * 4) autodock4
+	 *
+	 * @return path to DLF file in hdfs
+	 */
+	public DockResult launch() {
+		try {
+			dockResult = new DockResult(dockingProperties.getId(), dockingProperties.getPathToFiles(), key);
+
+			if (errorMessage.isEmpty()) {
+				if (isSuccessLaunchCommand(Pipeline.PREPARE_GPF,getGPFLocalPath())) {
+					if (isSuccessLaunchCommand(Pipeline.CONVERT_GPF, getGPFLocalPath())) {
+						processingFile(getGPFLocalPath(), GPF_signature);
+						if (isSuccessLaunchCommand(Pipeline.AUTOGRID, getGLGLocalPath())) {
+							if (isSuccessLaunchCommand(Pipeline.PREPARE_DPF, getDPFLocalPath())) {
+								processingFile(getDPFLocalPath(), DPF_signature);
+								if (isSuccessLaunchCommand(Pipeline.AUTODOCK,getDLGLocalPath())) {
+									FileUtils.copy(local, getDLGLocalPath(), hdfs, dockResult.getPathDLGinHDFS());
+								} else throw new TaskException("Неудача на этапе Autodock");
+							} else throw new TaskException("Неудача на этапе подготовке DPF");
+						} else throw new TaskException("Неудача на этапе Autogrid");
+					} else throw new TaskException("Неудача на этапе конвертации GPF");
+				} else throw new TaskException("Неудача на этапе подготовке GPF");
+			} else throw new TaskException(errorMessage);
+		}
+		catch (TaskException e) {
+			dockResult.fail("TaskException:" + e.getMessage());
+			msg.add("TaskException:" + e.getMessage());
+		}
+		catch (IOException e){
+			dockResult.fail("IOException: " + e.getMessage());
+			msg.add("IOException: " + e.getMessage());
+		}
+		finally {
+			try {
+				Path wd = new Path(localDir);
+				if (FileUtils.exist(wd,local))
+					FileUtils.deleteFolder(wd, local);
+			}
+			catch (IOException | TaskException e) {
+				String s = "Не удалось высвободить ресурсы для " + dockingProperties.getId() + "\n" + e.getMessage();
+				msg.add(s);
+				msg.add(dockingProperties.toString());
+
+			}
+			if (!errorMessage.isEmpty()) {
+				msg.add(dockingProperties.toString());
+				msg.add(errorMessage);
+			}
+			log.writeRecord(msg);
+			try {
+				String s = getTime() + "\t"+ key.toString() + "\t" + dockResult.getNode() +"\t" + dockingProperties.getId() + "\t";
+				if (FileUtils.exist(new Path(dockResult.getPathDLGinHDFS()),hdfs))
+					s += "has DLG";
+				else
+					s += "not DLG";
+				System.out.println(s);
+				log.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return dockResult;
+		}
+	}
+
+	/**Формирует текст команды для запуска в командной строке*/
 	private String formCommand(Pipeline action) {
 		String cmd;
 		String flex = dockingProperties.getReceptorFlexiblePart().isEmpty() ? "" :
@@ -153,80 +238,8 @@ public class Dock {
 	}
 
 	/**
-	 * @return the dockingProperties
-	 */
-	public DockingProperties getDockingProperties() {
-		return dockingProperties;
-	}
-
-	/**
-	 * start on local node pipe of scripts
-	 * 1) prepare_gpf4.py
-	 * 2) autogrid
-	 * 3) prepare_dpf42.py
-	 * 4) autodock
-	 *
-	 * @return path to DLF file in hdfs
-	 */
-	public DockResult launch() {
-		try {
-			dockResult = new DockResult(dockingProperties.getId(), dockingProperties.getPathToFiles(), key);
-			if (errorMessage.isEmpty()) {
-				if (isSuccessPrepareGpf()) {
-					if (isSuccessConvertGpf()) {
-						processingFile(getGPFLocalPath(), GPF_signature);
-						if (isSuccessAutogrid()) {
-							if (isSuccessPrepareDpf()) {
-								processingFile(getDPFLocalPath(), DPF_signature);
-								if (isFinihedAutodock()) {
-									FileUtils.copy(local, getDLGLocalPath(), hdfs, dockResult.getPathDLGinHDFS());
-								} else throw new TaskException("Неудача на этапе Autodock");
-							} else throw new TaskException("Неудача на этапе подготовке DPF");
-						} else throw new TaskException("Неудача на этапе Autogrid");
-					} else throw new TaskException("Неудача на этапе конвертации GPF");
-				} else throw new TaskException("Неудача на этапе подготовке GPF");
-			} else throw new TaskException(errorMessage);
-		}
-		catch (TaskException e) {
-			dockResult.fail("TaskException:" + e.getMessage());
-			msg.add("TaskException:" + e.getMessage());
-		}
-		catch (IOException e){
-			dockResult.fail("IOException: " + e.getMessage());
-			msg.add("IOException: " + e.getMessage());
-		}
-		finally {
-			try {
-				Path wd = new Path(localDir);
-				if (FileUtils.exist(wd,local))
-					FileUtils.deleteFolder(wd, local);
-			}
-			catch (IOException | TaskException e) {
-				String s = "Не удалось высвободить ресурсы для " + dockingProperties.getId() + "\n" + e.getMessage();
-				msg.add(s);
-				msg.add(dockingProperties.toString());
-
-            }
-			if (!errorMessage.isEmpty()) {
-				msg.add(dockingProperties.toString());
-				msg.add(errorMessage);
-            }
-			log.writeRecord(msg);
-			try {
-				String s = key.toString() + "\t" + dockingProperties.getId() + "\t";
-				if (FileUtils.exist(new Path(dockResult.getPathDLGinHDFS()),hdfs))
-					s += "has DLG";
-				else
-					s += "not DLG";
-				System.out.println(s);
-				log.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return dockResult;
-		}
-	}
-
+	 * Копирует необходимые файлы из папки в hdfs в локальную рабочую папку
+	 * */
 	private void copyToLocal() throws IOException {
 		if (!local.exists(new Path(localDir)))
 			local.mkdirs(new Path(localDir));
@@ -237,55 +250,20 @@ public class Dock {
 
 	}
 
-	private boolean isFinihedAutodock() {
-		int code = launchCommand(formCommand(Pipeline.AUTODOCK));
-		return code == 0;
-	}
-
-	private boolean isSuccessPrepareDpf() {
-		int code = launchCommand(formCommand(Pipeline.PREPARE_DPF));
+	/**Запускает скрипты и проверяет успешность их запуска.*/
+	private boolean isSuccessLaunchCommand(Pipeline cmd, String pathToCheck){
+		int code = launchCommand(formCommand(cmd));
 		if (code != 0)
 			return false;
 		else {
 			try {
-				ArrayList<String> lines = FileUtils.readFile(getDPFLocalPath(), local);
-				if (lines.size() == 0)
-					return false;
-				return true;
-			} catch (IOException e) {
-				return false;
-			}
-		}
-	}
-
-	private boolean isSuccessAutogrid() {
-		int code = launchCommand(formCommand(Pipeline.AUTOGRID));
-		if (code != 0)
-			return false;
-		else {
-			try {
-				ArrayList<String> lines = FileUtils.readFile(getGLGLocalPath(), local);
-				if (lines.size() == 0)
-					return false;
-				else {
+				ArrayList<String> lines = FileUtils.readFile(pathToCheck, local);
+				if (cmd == Pipeline.AUTOGRID || cmd == Pipeline.AUTODOCK) {
 					for (int i = lines.size() - 1; i > lines.size() - 21; i--)
 						if (lines.get(i).contains("Successful Completion"))
 							return true;
 					return false;
 				}
-			} catch (IOException e) {
-				return false;
-			}
-		}
-	}
-
-	private boolean isSuccessPrepareGpf() {
-		int code = launchCommand(formCommand(Pipeline.PREPARE_GPF));
-		if (code != 0)
-			return false;
-		else {
-			try {
-				ArrayList<String> lines = FileUtils.readFile(getGPFLocalPath(), local);
 				if (lines.size() == 0)
 					return false;
 				return true;
@@ -294,35 +272,22 @@ public class Dock {
 			}
 		}
 	}
-	private boolean isSuccessConvertGpf() {
-		int code = launchCommand(formCommand(Pipeline.CONVERT_GPF));
-		if (code != 0)
-			return false;
-		else {
-			try {
-				ArrayList<String> lines = FileUtils.readFile(getGPFLocalPath(), local);
-				if (lines.size() == 0)
-					return false;
-				return true;
-			} catch (IOException e) {
-				return false;
-			}
+	/**
+	 * Запускает команду в командной строке
+	 * @param cmd  - текст команды
+	 * @return код выполнения
+	 * */
+	private int launchCommand(String cmd) {
+		try {
+			Process process = runtime.exec(cmd);
+			log.redirect(process.getInputStream());
+			return process.waitFor();
+		}
+		catch (InterruptedException | IOException e) {
+			this.errorMessage = e.getMessage();
+			return -1001;
 		}
 	}
-	/*private boolean hasSignature(ArrayList<String> lines, String[] signature) {
-		boolean f = true;
-		for (String s : signature) {
-			f = false;
-			for (String l : lines) {
-				if (l.contains(s)) {
-					f = true;
-					break;
-				}
-			}
-			if (!f) break;
-		}
-		return f;
-	}*/
 
 	/**
 	 * Редактирвание файлов GPF и DPF. Прописывание полного пути к файлам.
@@ -356,16 +321,18 @@ public class Dock {
 		return b.append("\n").toString();
 	}
 
-	private int launchCommand(String cmd) {
-		try {
-			Process process = runtime.exec(cmd);
-			log.redirect(process.getInputStream());
-			return process.waitFor();
-		}
-		catch (InterruptedException | IOException e) {
-			this.errorMessage = e.getMessage();
-			return -1001;
-		}
+	/**
+	 * @return the dockingProperties
+	 */
+	public DockingProperties getDockingProperties() {
+		return dockingProperties;
+	}
+
+
+	private String getTime(){
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+		Date start = new Date(System.currentTimeMillis());
+		return format.format(start);
 	}
 
 	private String getDLGLocalPath() {
@@ -409,11 +376,5 @@ public class Dock {
 		return localDir + localSep + dockingProperties.getReceptorFlexiblePart();
 	}
 
-	private enum Pipeline {
-		PREPARE_GPF,
-		CONVERT_GPF,//TODO
-		AUTOGRID,
-		PREPARE_DPF,
-		AUTODOCK
-	}
+
 }

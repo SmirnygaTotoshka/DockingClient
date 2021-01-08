@@ -46,8 +46,8 @@ public class DockingServer extends Thread{
                         parseAnswer(client.getInputStream());
                         client.close();
                     }
-                    catch (IOException | TaskException e) {
-                        System.err.println("Возникла ошибка на сервере при обработке ответа:");
+                    catch (IOException | TaskException | NumberFormatException e) {
+                        System.out.println("Возникла ошибка на сервере при обработке ответа:");
                         e.printStackTrace();
                     }
                 });
@@ -68,7 +68,9 @@ public class DockingServer extends Thread{
         String[] comp = answer.split("=");
         int num = Integer.parseInt(comp[1]);
         Statistics.Counters c = Statistics.Counters.valueOf(comp[0]);
-        statistics.incrCounter(c ,num);
+        synchronized (statistics) {
+            statistics.incrCounter(c, num);
+        }
         printAnswer(c);
     }
 
