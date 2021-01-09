@@ -108,8 +108,9 @@ public class Dock {
 	public DockResult launch() {
 		try {
 			dockResult = new DockResult(dockingProperties.getId(), dockingProperties.getPathToFiles(), key);
-
-			if (errorMessage.isEmpty()) {
+			if (dockResult.hasSuccessDLG(hdfs))
+				errorMessage = "Уже имеется посчитанные результаты для этой пары.";
+			if (hasTrouble()) {
 				if (isSuccessLaunchCommand(Pipeline.PREPARE_GPF,getGPFLocalPath())) {
 					if (isSuccessLaunchCommand(Pipeline.CONVERT_GPF, getGPFLocalPath())) {
 						processingFile(getGPFLocalPath(), GPF_signature);
@@ -165,6 +166,9 @@ public class Dock {
 		}
 	}
 
+	public boolean hasTrouble(){
+		return errorMessage.isEmpty();
+	}
 	/**Формирует текст команды для запуска в командной строке*/
 	private String formCommand(Pipeline action) {
 		String cmd;

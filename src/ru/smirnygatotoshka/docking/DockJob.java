@@ -103,7 +103,7 @@ public class DockJob extends Configured implements Tool {
 				client.send(Statistics.Counters.EXECUTION_FAIL, 1);
 				reporter.incrCounter(Statistics.Counters.EXECUTION_FAIL,1);
 			}
-			if (FileUtils.exist(new Path(result.getPathDLGinHDFS()),FileSystem.get(clusterProperties.getJobConf()))) {
+			if (result.hasSuccessDLG(FileSystem.get(clusterProperties.getJobConf())) && !d.hasTrouble()) {
 				outputCollector.collect(new Text(result.getId()), result);
 				client.send(Statistics.Counters.ALL, 1);
 				reporter.incrCounter(Statistics.Counters.ALL, 1);
@@ -145,7 +145,7 @@ public class DockJob extends Configured implements Tool {
 				DockResult result = iterator.next();
 				if (result.isSuccess() && error_message.contentEquals("")) {
 					if (error_message.contentEquals("")) {
-						if (hasSuccessDLG(result.getPathDLGinHDFS())) {
+						if (result.hasSuccessDLG(hdfs)) {
 							float energy = parseHistogram(result.getPathDLGinHDFS());
 							if (energy == -100000F) {
 								result.fail("Не найдено значение энергии");
@@ -179,23 +179,6 @@ public class DockJob extends Configured implements Tool {
 				outputCollector.collect(result.getKey(), result.getText());
 			}
 		}
-
-		private boolean hasSuccessDLG(String pathToDLG) {
-			try {
-				ArrayList<String> lines = FileUtils.readFile(pathToDLG, hdfs);
-				if (lines.size() == 0)
-					return false;
-				else {
-					for (int i = lines.size() - 1; i > lines.size() - 21; i--)
-						if (lines.get(i).contains("Successful Completion"))
-							return true;
-					return false;
-				}
-			} catch (IOException e) {
-				return false;
-			}
-		}
-
 		/**
 		 * @return DockResult.FAILED_ENERGY - 2 - <code>NumberFormatException</code>
 		 */
@@ -226,6 +209,7 @@ public class DockJob extends Configured implements Tool {
 				return -100000F - 2;
 			}
 		}
+
 	}
 
 

@@ -1,5 +1,6 @@
 package ru.smirnygatotoshka.docking;
 
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparable;
@@ -9,6 +10,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 /**
  * Класс, содержащий информацию о выполнении докинга. Служит результатом Map и ключом Reduce.
@@ -105,7 +107,21 @@ public class DockResult implements WritableComparable<LongWritable> {
         return key.compareTo(o);
     }
 
-
+    public boolean hasSuccessDLG(FileSystem sys) {
+        try {
+            ArrayList<String> lines = FileUtils.readFile(pathDLGinHDFS, sys);
+            if (lines.size() == 0)
+                return false;
+            else {
+                for (int i = lines.size() - 1; i > lines.size() - 21; i--)
+                    if (lines.get(i).contains("Successful Completion"))
+                        return true;
+                return false;
+            }
+        } catch (IOException e) {
+            return false;
+        }
+    }
 
     public void fail(String cause) {
         success = false;

@@ -119,6 +119,7 @@ public class DockingServer extends Thread{
                 System.out.println(bar);
             }
         }
+
     }
     private String getTime(){
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
