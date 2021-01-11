@@ -26,7 +26,7 @@ public class DockingServer extends Thread{
     public void run(){
         try {
             System.out.println("Server is started.");
-            listen();//TODO - Server fall after 1 connection closed. Repair + send one message not many
+            listen();
         }
         catch (Exception e) {
             System.err.println("Server is fall.");
@@ -71,21 +71,14 @@ public class DockingServer extends Thread{
         synchronized (statistics) {
             statistics.incrCounter(c, num);
         }
-        printAnswer(c);
+        printAnswer();
     }
 
-    private void printAnswer(Statistics.Counters counter){
-        if (counter.equals(Statistics.Counters.ALL))
-            printDockingProgress();
-        else
-            printAnalyzeProgress();
-    }
-
-    private void printDockingProgress(){
+    private void printAnswer(){
         synchronized (statistics) {
             String bar = getTime() + "\tExecution[";
             try {
-                float progress = (float)statistics.getAll() / statistics.getNumTasks() * 100;
+                float progress = ((float)statistics.getSuccess() + statistics.getFailed()) / statistics.getAll() * 100;
                 int symbols = Math.round(progress / 5);
                 for (int i = 0; i < symbols; i++) {
                     bar += "+";
@@ -93,40 +86,18 @@ public class DockingServer extends Thread{
                 for (int i = symbols; i < 20; i++){
                     bar += "-";
                 }
-                bar += "]\t" + progress + "%\t" + statistics.getAll() + "/" + statistics.getNumTasks();
+                bar += "]\t" + progress + "%\n" +
+                        "Success = " + statistics.getSuccess() + "/" + statistics.getAll() + ";Failed = " +
+                                       statistics.getFailed() + "/" + statistics.getAll();
                 System.out.println(bar);
             }
             catch (ArithmeticException e){
-                bar += "]\t" + statistics.getAll();
+                bar += "]\t" + statistics.getSuccess();
                 System.out.println(bar);
             }
         }
     }
 
-    private void printAnalyzeProgress(){
-        synchronized (statistics) {
-            String bar = getTime() + "\tAnalyze[";
-            try {
-                float progress = (statistics.getExecuteFail() + statistics.getSuccess() + statistics.getAnalyzeFail()) / (float)statistics.getNumTasks() * 100;
-                int symbols = Math.round(progress / 5);
-                for (int i = 0; i < symbols; i++) {
-                    bar += "+";
-                }
-                for (int i = symbols; i < 20; i++){
-                    bar += "-";
-                }
-                int success_procent = Math.round(statistics.getSuccess() / (float) statistics.getNumTasks() * 100);
-                int fail_procent = Math.round((statistics.getExecuteFail() + statistics.getAnalyzeFail()) / (float)statistics.getNumTasks() * 100);
-                bar += "]\t" + progress + "%\t" + "Успешно = " + success_procent + "\tПровалено = " + fail_procent;
-                System.out.println(bar);
-            }
-            catch (ArithmeticException e){
-                bar += "]\t" + "Успешно = " + statistics.getSuccess()  + "\tПровалено = " + (statistics.getExecuteFail() + statistics.getAnalyzeFail());
-                System.out.println(bar);
-            }
-        }
-
-    }
     private String getTime(){
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
         Date start = new Date(System.currentTimeMillis());

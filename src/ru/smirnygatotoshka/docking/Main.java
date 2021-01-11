@@ -44,8 +44,7 @@ public class Main {
         }
         finally {
             finish = new Date(System.currentTimeMillis());
-            String taskName = cluster.equals(null) ? "FAILED_TASK" : cluster.getTaskName();
-            String message = "Task " + taskName + " has completed with code " + res + ".\n" +
+            String message = "Task " + cluster.getTaskName() + " has completed with code " + res + ".\n" +
                     "Statistics:\n" +
                     "Start time " + format.format(start) + "\n" +
                     Statistics.getInstance().toString() +
@@ -62,36 +61,4 @@ public class Main {
             System.exit(res);
         }
     }
-
-    //private void
-
-    /**
-     * @deprecated
-     * CMD arguments
-     * 0 - input csv in hdfs
-     * 1 - output path in hdfs
-     * 2 - task id
-     * 3 - path to MGLTools(local)
-     * 4 - output path(local)
-     * 5 - address to master node
-     * 6 - number of reduse task
-     * 7 - is needed prepare_gpf
-     * */
-  /*  public static void main(String[] args) throws Exception {
-        Date start = new Date(System.currentTimeMillis());
-        int res = ToolRunner.run(new Configuration(), new DockJob(), args);
-        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
-        Date finish = new Date(System.currentTimeMillis());
-        String message = "Task " + args[2] + " has completed with code " + res + ".\n" +
-                "Statistics:\n" +
-                "Start time " + formatter.format(start) + "\n" +
-                "Success = " + job.getCounters().findCounter(DockJob.Counters.GOOD).getValue() + "\n" +
-                "Fail = " + job.getCounters().findCounter(DockJob.Counters.BAD).getValue()  + "\n" +
-                "All = " + job.getCounters().findCounter(DockJob.Counters.ALL).getValue() + ".\n" +
-                "Finish time " + formatter.format(finish) +
-                ". With the best wishes,Hadoop cluster of bioinformatics department MBF RNRMU.";
-        SenderMail senderMail = new SenderMail(message);
-        senderMail.send();
-        System.exit(res);
-    }*/
 }

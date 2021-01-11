@@ -9,12 +9,17 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cec54ce2-7521-4ebe-8f26-06fbe644a3c6" name="Plans" comment="Попвтка сделать адекватными счетчики прогресса">
+    <list default="true" id="cec54ce2-7521-4ebe-8f26-06fbe644a3c6" name="Plans" comment="Косметические изменения в счетчике прогресса">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockJob$DockMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockJob$DockMapper.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockJob$DockReducer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockJob$DockReducer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/FileUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/FileUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockingServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockingServer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Dock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Dock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockResult.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Statistics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Statistics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/test/DockingClientTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/test/DockingClientTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/test/StatisticsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/test/StatisticsTest.java" afterDir="false" />
     </list>
     <list id="2d452110-0e54-4c17-a803-f55666bd61b8" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -350,7 +355,14 @@
       <option name="project" value="LOCAL" />
       <updated>1610220050709</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Косметические изменения в счетчике прогресса">
+      <created>1610345123408</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1610345123408</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -383,7 +395,8 @@
     <MESSAGE value="Изменения:&#10;Отправка ключа и сигнла на сервер только при существовании длг файла&#10;Нужна проверка" />
     <MESSAGE value="Некоторые комментарии и очистка кода" />
     <MESSAGE value="Попвтка сделать адекватными счетчики прогресса" />
-    <option name="LAST_COMMIT_MESSAGE" value="Попвтка сделать адекватными счетчики прогресса" />
+    <MESSAGE value="Косметические изменения в счетчике прогресса" />
+    <option name="LAST_COMMIT_MESSAGE" value="Косметические изменения в счетчике прогресса" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="WindowStateProjectService">
@@ -407,10 +420,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="331" y="117" key="#com.intellij.ide.fileTemplates.ui.ConfigureTemplatesDialog/0.0.1366.728@0.0.1366.728" timestamp="1606001954958" />
-    <state x="488" y="84" key="#com.intellij.ide.util.MemberChooser" timestamp="1609752767722">
+    <state x="488" y="84" key="#com.intellij.ide.util.MemberChooser" timestamp="1610402870687">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="488" y="84" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1609752767722" />
+    <state x="488" y="84" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1610402870687" />
     <state x="413" y="146" key="#com.intellij.ide.util.PackageChooserDialog" timestamp="1606002056424">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -511,10 +524,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1608758873303" />
-    <state x="92" y="92" width="1182" height="544" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1607474569531">
+    <state x="92" y="92" width="1182" height="544" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1610402473157">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="92" y="92" width="1182" height="544" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1366.728@0.0.1366.728" timestamp="1607474569531" />
+    <state x="92" y="92" width="1182" height="544" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1366.728@0.0.1366.728" timestamp="1610402473157" />
     <state x="391" y="193" key="com.intellij.ide.util.TipDialog" timestamp="1610239969905">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -576,38 +589,28 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java</url>
-          <line>48</line>
+          <line>45</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java</url>
-          <line>42</line>
+          <line>39</line>
           <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java</url>
-          <line>43</line>
+          <line>40</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java</url>
-          <line>56</line>
+          <line>53</line>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java</url>
-          <line>58</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Main.java</url>
           <line>55</line>
-          <option name="timeStamp" value="30" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Main.java</url>
-          <line>58</line>
-          <option name="timeStamp" value="31" />
+          <option name="timeStamp" value="26" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

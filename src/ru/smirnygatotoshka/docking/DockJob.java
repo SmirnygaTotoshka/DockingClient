@@ -10,8 +10,6 @@ import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.util.Tool;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 
 /**
@@ -22,16 +20,12 @@ import java.util.Random;
  * @author SmirnygaTotoshka
  */
 public class DockJob extends Configured implements Tool {
-	RunningJob getJob() {
-		return job;
-	}
 
 	public DockJob(ClusterProperties cluster) {
 		this.cluster = cluster;
 		this.jobConf = cluster.getJobConf();
 	}
 
-	private static RunningJob job;
 	private JobConf jobConf;
 	private ClusterProperties cluster;
 	//private final String
@@ -39,7 +33,7 @@ public class DockJob extends Configured implements Tool {
 	 * @see org.apache.hadoop.util.Tool#run(java.lang.String[])
 	 */
 	@Override
-	public int run(String[] arg0) throws IOException {
+	public int run(String[] arg0) throws IOException, TaskException {
 		Path in = new Path(arg0[0]);//TODO - fix param
 		Path out = new Path(cluster.getOutputPath());
 
@@ -56,17 +50,17 @@ public class DockJob extends Configured implements Tool {
 
 		jobConf.setJobName(cluster.getTaskName());
 		jobConf.setMapperClass(DockMapper.class);
-		jobConf.setMapOutputKeyClass(Text.class);
-		jobConf.setMapOutputValueClass(DockResult.class);
-		jobConf.setReducerClass(DockReducer.class);
+		//jobConf.setMapOutputKeyClass(Text.class);
+		//jobConf.setMapOutputValueClass(Text.class);
+		//jobConf.setReducerClass(DockReducer.class);
 		jobConf.setOutputKeyClass(LongWritable.class);
 		jobConf.setOutputValueClass(Text.class);
 		jobConf.setInputFormat(TextInputFormat.class);
 		jobConf.setNumMapTasks(Integer.parseInt(cluster.getMapperNumber()));
-		jobConf.setNumReduceTasks(Integer.parseInt(cluster.getMapperNumber()));
+		jobConf.setNumReduceTasks(0);
 		jobConf.set("mapreduce.task.timeout", "0");
-        Statistics.getInstance().setNumTasks(FileUtils.readFile(arg0[0],FileSystem.get(jobConf)).size());
-        job = JobClient.runJob(jobConf);
+        Statistics.getInstance().incrCounter(Statistics.Counters.ALL,FileUtils.readFile(arg0[0],FileSystem.get(jobConf)).size());
+		RunningJob job = JobClient.runJob(jobConf);
 
 		return 0;
 	}
@@ -79,7 +73,7 @@ public class DockJob extends Configured implements Tool {
 	 *
 	 * @author SmirnygaTotoshka
 	 */
-	public static class DockMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, DockResult> {
+	public static class DockMapper extends MapReduceBase implements Mapper<LongWritable, Text, LongWritable, Text> {
 		private DockingClient client;
 		private ClusterProperties clusterProperties;
 
@@ -96,18 +90,15 @@ public class DockJob extends Configured implements Tool {
 		}
 
 		@Override
-		public void map(LongWritable id, Text line, OutputCollector<Text, DockResult> outputCollector, Reporter reporter) throws IOException {
+		public void map(LongWritable id, Text line, OutputCollector<LongWritable, Text> outputCollector, Reporter reporter) throws IOException {
 			Dock d = new Dock(line, clusterProperties, id);
 			DockResult result = d.launch();
-			if (!result.isSuccess()) {
-				client.send(Statistics.Counters.EXECUTION_FAIL, 1);
-				reporter.incrCounter(Statistics.Counters.EXECUTION_FAIL,1);
+			if (result.isSuccess()) {
+				outputCollector.collect(result.getKey(), result.getText());
+				client.send(Statistics.Counters.SUCCESS, 1);
 			}
-			if (result.hasSuccessDLG(FileSystem.get(clusterProperties.getJobConf())) && !d.hasTrouble()) {
-				outputCollector.collect(new Text(result.getId()), result);
-				client.send(Statistics.Counters.ALL, 1);
-				reporter.incrCounter(Statistics.Counters.ALL, 1);
-			}
+			else
+				client.send(Statistics.Counters.FAILED, 1);
 			client.close();
 		}
 	}
@@ -119,7 +110,7 @@ public class DockJob extends Configured implements Tool {
 	 *
 	 * @author SmirnygaTotoshka
 	 */
-	public static class DockReducer extends MapReduceBase implements Reducer<Text, DockResult, LongWritable, Text> {
+/*	public static class DockReducer extends MapReduceBase implements Reducer<Text, DockResult, NullWritable, Text> {
 
 		private DockingClient client;
 		private ClusterProperties clusterProperties;
@@ -128,6 +119,7 @@ public class DockJob extends Configured implements Tool {
 
 		@Override
 		public void configure(JobConf job) {
+			super.configure(job);
 			super.configure(job);
 			this.clusterProperties = new ClusterProperties(job);
 			try {
@@ -140,7 +132,7 @@ public class DockJob extends Configured implements Tool {
 		}
 
 		@Override
-		public void reduce(Text text, Iterator<DockResult> iterator, OutputCollector<LongWritable, Text> outputCollector, Reporter reporter) throws IOException {
+		public void reduce(Text text, Iterator<DockResult> iterator, OutputCollector<NullWritable, Text> outputCollector, Reporter reporter) throws IOException {
 			while (iterator.hasNext()) {
 				DockResult result = iterator.next();
 				if (result.isSuccess() && error_message.contentEquals("")) {
@@ -164,7 +156,8 @@ public class DockJob extends Configured implements Tool {
 								client.send(Statistics.Counters.SUCCESS, 1);
 								reporter.incrCounter(Statistics.Counters.SUCCESS,1);
 							}
-						} else {
+						}
+						else {
 							result.fail("Провал autodock.");
 							client.send(Statistics.Counters.EXECUTION_FAIL, 1);
 							reporter.incrCounter(Statistics.Counters.EXECUTION_FAIL,1);
@@ -179,14 +172,14 @@ public class DockJob extends Configured implements Tool {
 				outputCollector.collect(result.getKey(), result.getText());
 			}
 		}
-		/**
+		*//**
 		 * @return DockResult.FAILED_ENERGY - 2 - <code>NumberFormatException</code>
-		 */
+		 *//*
 		private float parseHistogram(String pathToDLG) {
 			try {
-				/**
+				*//**
 				 * Ключевая фраза,после которой начинается искомая таблица с энергиями
-				 */
+				 *//*
 				final String START_HISTOGRAM = "CLUSTERING HISTOGRAM";
 				ArrayList<String> lines = FileUtils.readFile(pathToDLG, hdfs);
 				int i = -1;
@@ -210,7 +203,7 @@ public class DockJob extends Configured implements Tool {
 			}
 		}
 
-	}
+	}*/
 
 
 

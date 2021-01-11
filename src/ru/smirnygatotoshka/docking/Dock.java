@@ -28,7 +28,8 @@ public class Dock {
 		CONVERT_GPF,
 		AUTOGRID,
 		PREPARE_DPF,
-		AUTODOCK
+		AUTODOCK,
+		ANALYZE
 	}
 
 	private final String[] GPF_signature = new String[]{"gridfld", "receptor", "map", "elecmap", "dsolvmap"};
@@ -119,6 +120,9 @@ public class Dock {
 								processingFile(getDPFLocalPath(), DPF_signature);
 								if (isSuccessLaunchCommand(Pipeline.AUTODOCK,getDLGLocalPath())) {
 									FileUtils.copy(local, getDLGLocalPath(), hdfs, dockResult.getPathDLGinHDFS());
+									if (isSuccessLaunchCommand(Pipeline.ANALYZE, getDLGLocalPath())){
+										dockResult.success(getAnalyzeOutLocalPath(), local);
+									} else throw new TaskException("Не удалось проанализировать.");
 								} else throw new TaskException("Неудача на этапе Autodock");
 							} else throw new TaskException("Неудача на этапе подготовке DPF");
 						} else throw new TaskException("Неудача на этапе Autogrid");
@@ -159,6 +163,8 @@ public class Dock {
 					s += "not DLG";
 				System.out.println(s);
 				log.close();
+				if (!dockResult.hasSuccessDLG(hdfs))
+					dockResult.setPathDLGinHDFS("None");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -233,6 +239,15 @@ public class Dock {
 				else
 					//on Win we start exe. it has to be in localDir
 					cmd = "autodock4.exe -p " + getDPFLocalPath() + " -l " + getDLGLocalPath();
+				break;
+			case ANALYZE:
+				cmd = "python " + getScriptsPath() +
+						"summarize_docking.py" +
+						" -l " + getDLGLocalPath() +
+						" -r " + getReceptorLocalPath() +
+						" -o "+ getAnalyzeOutLocalPath() +
+						" -v -b -k";
+
 				break;
 			default:
 				cmd = "";
@@ -355,7 +370,9 @@ public class Dock {
 	public String getReceptorLocalPath() {
 		return localDir + localSep + dockingProperties.getReceptor();
 	}
-
+	public String getAnalyzeOutLocalPath(){
+		return localDir + localSep + "result.txt";
+	}
 	public String getGPFLocalPath() {
 		return localDir + localSep + dockingProperties.getGpfName();
 	}

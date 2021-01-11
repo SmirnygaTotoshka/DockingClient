@@ -4,25 +4,13 @@ import java.text.DecimalFormat;
 
 public class Statistics {
 
-    private volatile int numTasks;
-
-    public int getNumTasks() {
-        return numTasks;
-    }
-
-    public void setNumTasks(int numTasks) {
-        this.numTasks = numTasks;
-    }
-
     private volatile int all;
-    private volatile int executeFail;
-    private volatile int analyzeFail;
+    private volatile int failed;
     private volatile int success;
 
     public enum Counters {
         SUCCESS,
-        ANALYZE_FAIL,
-        EXECUTION_FAIL,
+        FAILED,
         ALL;
     }
 
@@ -37,10 +25,8 @@ public class Statistics {
     private Statistics()
     {
         all = 0;
-        executeFail = 0;
-        analyzeFail = 0;
+        failed = 0;
         success = 0;
-        numTasks = 0;
     }
 
 
@@ -49,11 +35,8 @@ public class Statistics {
             case SUCCESS:
                 success += num;
                 break;
-            case ANALYZE_FAIL:
-                analyzeFail += num;
-                break;
-            case EXECUTION_FAIL:
-                executeFail += num;
+            case FAILED:
+                failed += num;
                 break;
             case ALL:
                 all += num;
@@ -67,12 +50,8 @@ public class Statistics {
         return all;
     }
 
-    public int getExecuteFail() {
-        return executeFail;
-    }
-
-    public int getAnalyzeFail() {
-        return analyzeFail;
+    public int getFailed() {
+        return failed;
     }
 
     public int getSuccess() {
@@ -86,7 +65,7 @@ public class Statistics {
         float s_p,f_p;
         try{
             s_p = (float) success / all * 100;
-            f_p = (float) (executeFail + analyzeFail) / all * 100;
+            f_p = (float) failed / all * 100;
             s = format.format(s_p);
             f = format.format(f_p);
         }
@@ -94,8 +73,7 @@ public class Statistics {
             s = f ="0.00000";
         }
         return "All = " + all + "\n" +
-               "Execute fail = " + executeFail + "\n" +
-               "Analyse fail = " + analyzeFail + "\n" +
+               "Failed = " + failed + "\n" +
                "There are failed " + f + "%.\n"+
                "Success = " + success + "; There are " + s + "%.\n";
     }
