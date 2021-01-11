@@ -87,8 +87,11 @@ public class DockingServer extends Thread{
             try {
                 float progress = (float)statistics.getAll() / statistics.getNumTasks() * 100;
                 int symbols = Math.round(progress / 5);
-                for (int i = 0; i <= symbols; i++) {
+                for (int i = 0; i < symbols; i++) {
                     bar += "+";
+                }
+                for (int i = symbols; i < 20; i++){
+                    bar += "-";
                 }
                 bar += "]\t" + progress + "%\t" + statistics.getAll() + "/" + statistics.getNumTasks();
                 System.out.println(bar);
@@ -106,8 +109,11 @@ public class DockingServer extends Thread{
             try {
                 float progress = (statistics.getExecuteFail() + statistics.getSuccess() + statistics.getAnalyzeFail()) / (float)statistics.getNumTasks() * 100;
                 int symbols = Math.round(progress / 5);
-                for (int i = 0; i <= symbols; i++) {
+                for (int i = 0; i < symbols; i++) {
                     bar += "+";
+                }
+                for (int i = symbols; i < 20; i++){
+                    bar += "-";
                 }
                 int success_procent = Math.round(statistics.getSuccess() / (float) statistics.getNumTasks() * 100);
                 int fail_procent = Math.round((statistics.getExecuteFail() + statistics.getAnalyzeFail()) / (float)statistics.getNumTasks() * 100);
