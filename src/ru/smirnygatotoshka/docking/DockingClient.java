@@ -9,7 +9,6 @@ import java.net.Socket;
 
 public class DockingClient {
     private Socket socket;
-    private String id;
     private ClusterProperties clusterProperties;
     private Log log;
 

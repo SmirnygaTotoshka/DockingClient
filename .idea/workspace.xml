@@ -9,17 +9,27 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cec54ce2-7521-4ebe-8f26-06fbe644a3c6" name="Plans" comment="Косметические изменения в счетчике прогресса">
+    <list default="true" id="cec54ce2-7521-4ebe-8f26-06fbe644a3c6" name="Plans" comment="Глобальные изменения: убран этап Reduce, этап анализа добавлен в мап и реализуется измененным скриптом summarize_docking.py">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/DockingClient_jar/DockingClient.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/DockingClient_jar/DockingClient.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Dock$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Dock$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Dock$Pipeline.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Dock$Pipeline.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Dock.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Dock.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockJob$DockMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockJob$DockMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockJob$DockReducer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockJob.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockJob.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockResult.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockingServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockingServer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Statistics$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Statistics$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Statistics$Counters.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Statistics$Counters.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Statistics.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Statistics.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/test/DockingClientTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/test/DockingClientTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/test/StatisticsTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/test/StatisticsTest.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Dock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Dock.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockResult.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Statistics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Statistics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/test/DockingClientTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/test/DockingClientTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/test/StatisticsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/test/StatisticsTest.java" afterDir="false" />
     </list>
     <list id="2d452110-0e54-4c17-a803-f55666bd61b8" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -362,7 +372,14 @@
       <option name="project" value="LOCAL" />
       <updated>1610345123408</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Глобальные изменения: убран этап Reduce, этап анализа добавлен в мап и реализуется измененным скриптом summarize_docking.py">
+      <created>1610403778482</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1610403778482</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -396,7 +413,8 @@
     <MESSAGE value="Некоторые комментарии и очистка кода" />
     <MESSAGE value="Попвтка сделать адекватными счетчики прогресса" />
     <MESSAGE value="Косметические изменения в счетчике прогресса" />
-    <option name="LAST_COMMIT_MESSAGE" value="Косметические изменения в счетчике прогресса" />
+    <MESSAGE value="Глобальные изменения: убран этап Reduce, этап анализа добавлен в мап и реализуется измененным скриптом summarize_docking.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="Глобальные изменения: убран этап Reduce, этап анализа добавлен в мап и реализуется измененным скриптом summarize_docking.py" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="WindowStateProjectService">
@@ -460,10 +478,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="434" y="234" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1366.728@0.0.1366.728" timestamp="1606846897709" />
-    <state x="308" y="0" key="CommitChangelistDialog2" timestamp="1610345083478">
+    <state x="308" y="0" key="CommitChangelistDialog2" timestamp="1610403750749">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="308" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1610345083478" />
+    <state x="308" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1610403750749" />
     <state x="430" y="83" key="DetectedRootsChooserDialog" timestamp="1605998869747">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -528,10 +546,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="92" y="92" width="1182" height="544" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1366.728@0.0.1366.728" timestamp="1610402473157" />
-    <state x="391" y="193" key="com.intellij.ide.util.TipDialog" timestamp="1610239969905">
+    <state x="391" y="193" key="com.intellij.ide.util.TipDialog" timestamp="1610511316785">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="391" y="193" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1610239969905" />
+    <state x="391" y="193" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1610511316785" />
     <state x="387" y="266" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1606002132287">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -564,10 +582,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="339" y="162" width="672" height="677" key="run.anything.popup/0.0.1366.728@0.0.1366.728" timestamp="1606864340068" />
-    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1606345296076">
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1610514337754">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1606345296076" />
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1610514337754" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -589,27 +607,27 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java</url>
-          <line>45</line>
+          <line>42</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java</url>
-          <line>39</line>
+          <line>36</line>
           <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java</url>
-          <line>40</line>
+          <line>37</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java</url>
-          <line>53</line>
+          <line>50</line>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java</url>
-          <line>55</line>
+          <line>52</line>
           <option name="timeStamp" value="26" />
         </line-breakpoint>
       </breakpoints>

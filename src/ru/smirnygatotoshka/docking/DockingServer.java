@@ -87,7 +87,7 @@ public class DockingServer extends Thread{
                     bar += "-";
                 }
                 bar += "]\t" + progress + "%\n" +
-                        "Success = " + statistics.getSuccess() + "/" + statistics.getAll() + ";Failed = " +
+                        "Success = " + statistics.getSuccess() + "/" + statistics.getAll() + "; Failed = " +
                                        statistics.getFailed() + "/" + statistics.getAll();
                 System.out.println(bar);
             }

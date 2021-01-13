@@ -50,8 +50,8 @@ public class DockJob extends Configured implements Tool {
 
 		jobConf.setJobName(cluster.getTaskName());
 		jobConf.setMapperClass(DockMapper.class);
-		//jobConf.setMapOutputKeyClass(Text.class);
-		//jobConf.setMapOutputValueClass(Text.class);
+		jobConf.setMapOutputKeyClass(LongWritable.class);
+		jobConf.setMapOutputValueClass(Text.class);
 		//jobConf.setReducerClass(DockReducer.class);
 		jobConf.setOutputKeyClass(LongWritable.class);
 		jobConf.setOutputValueClass(Text.class);
@@ -92,13 +92,18 @@ public class DockJob extends Configured implements Tool {
 		@Override
 		public void map(LongWritable id, Text line, OutputCollector<LongWritable, Text> outputCollector, Reporter reporter) throws IOException {
 			Dock d = new Dock(line, clusterProperties, id);
-			DockResult result = d.launch();
-			if (result.isSuccess()) {
-				outputCollector.collect(result.getKey(), result.getText());
-				client.send(Statistics.Counters.SUCCESS, 1);
+			if (!d.hasTrouble()) {
+				DockResult result = d.launch();
+				if (result.isSuccess()) {
+					outputCollector.collect(result.getKey(), result.getText());
+					client.send(Statistics.Counters.SUCCESS, 1);
+				} else
+					client.send(Statistics.Counters.FAILED, 1);
+				System.out.println(result.toString());
 			}
-			else
-				client.send(Statistics.Counters.FAILED, 1);
+			else{
+				System.out.println(d.getTrouble());
+			}
 			client.close();
 		}
 	}

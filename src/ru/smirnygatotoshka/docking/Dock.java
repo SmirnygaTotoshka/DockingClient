@@ -73,6 +73,9 @@ public class Dock {
 		} catch (IOException e) {
 			errorMessage = "Ошибка при создании лога "+e.getMessage();
 		}
+		dockResult = new DockResult(dockingProperties.getId(), dockingProperties.getPathToFiles(), key);
+		if (dockResult.hasSuccessDLG(hdfs))
+			errorMessage = "Уже имеется посчитанные результаты для этой пары.";
 	}
 
 	public Dock() {
@@ -108,10 +111,7 @@ public class Dock {
 	 */
 	public DockResult launch() {
 		try {
-			dockResult = new DockResult(dockingProperties.getId(), dockingProperties.getPathToFiles(), key);
-			if (dockResult.hasSuccessDLG(hdfs))
-				errorMessage = "Уже имеется посчитанные результаты для этой пары.";
-			if (hasTrouble()) {
+			if (!hasTrouble()) {
 				if (isSuccessLaunchCommand(Pipeline.PREPARE_GPF,getGPFLocalPath())) {
 					if (isSuccessLaunchCommand(Pipeline.CONVERT_GPF, getGPFLocalPath())) {
 						processingFile(getGPFLocalPath(), GPF_signature);
@@ -120,8 +120,9 @@ public class Dock {
 								processingFile(getDPFLocalPath(), DPF_signature);
 								if (isSuccessLaunchCommand(Pipeline.AUTODOCK,getDLGLocalPath())) {
 									FileUtils.copy(local, getDLGLocalPath(), hdfs, dockResult.getPathDLGinHDFS());
-									if (isSuccessLaunchCommand(Pipeline.ANALYZE, getDLGLocalPath())){
+									if (isSuccessLaunchCommand(Pipeline.ANALYZE, getAnalyzeOutLocalPath())){
 										dockResult.success(getAnalyzeOutLocalPath(), local);
+										msg.add("SUCCESS");
 									} else throw new TaskException("Не удалось проанализировать.");
 								} else throw new TaskException("Неудача на этапе Autodock");
 							} else throw new TaskException("Неудача на этапе подготовке DPF");
@@ -173,7 +174,10 @@ public class Dock {
 	}
 
 	public boolean hasTrouble(){
-		return errorMessage.isEmpty();
+		return !errorMessage.isEmpty();
+	}
+	public String getTrouble(){
+		return getTime() + "\t" + errorMessage;
 	}
 	/**Формирует текст команды для запуска в командной строке*/
 	private String formCommand(Pipeline action) {
@@ -245,7 +249,7 @@ public class Dock {
 						"summarize_docking.py" +
 						" -l " + getDLGLocalPath() +
 						" -r " + getReceptorLocalPath() +
-						" -o "+ getAnalyzeOutLocalPath() +
+						" -o " + getAnalyzeOutLocalPath() +
 						" -v -b -k";
 
 				break;
