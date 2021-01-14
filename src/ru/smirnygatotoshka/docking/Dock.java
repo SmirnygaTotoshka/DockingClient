@@ -129,7 +129,7 @@ public class Dock {
 						} else throw new TaskException("Неудача на этапе Autogrid");
 					} else throw new TaskException("Неудача на этапе конвертации GPF");
 				} else throw new TaskException("Неудача на этапе подготовке GPF");
-			} else throw new TaskException(errorMessage);
+			} else throw new TaskException(getTrouble());
 		}
 		catch (TaskException e) {
 			dockResult.fail("TaskException:" + e.getMessage());
@@ -158,15 +158,17 @@ public class Dock {
 			log.writeRecord(msg);
 			try {
 				String s = getTime() + "\t"+ key.toString() + "\t" + dockResult.getNode() +"\t" + dockingProperties.getId() + "\t";
-				if (FileUtils.exist(new Path(dockResult.getPathDLGinHDFS()),hdfs))
+				if (dockResult.hasSuccessDLG(hdfs)) {
 					s += "has DLG";
-				else
+				}
+				else {
+					dockResult.setPathDLGinHDFS("None");
 					s += "not DLG";
+				}
 				System.out.println(s);
 				log.close();
-				if (!dockResult.hasSuccessDLG(hdfs))
-					dockResult.setPathDLGinHDFS("None");
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				e.printStackTrace();
 			}
 			return dockResult;
@@ -287,7 +289,7 @@ public class Dock {
 							return true;
 					return false;
 				}
-				if (lines.size() == 0)
+				if (lines.size() <= 1)
 					return false;
 				return true;
 			} catch (IOException e) {
@@ -400,6 +402,5 @@ public class Dock {
 			return "";
 		return localDir + localSep + dockingProperties.getReceptorFlexiblePart();
 	}
-
 
 }

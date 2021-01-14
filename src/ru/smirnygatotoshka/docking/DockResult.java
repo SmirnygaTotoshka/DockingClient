@@ -18,16 +18,16 @@ import java.util.Date;
  *
  * @author SmirnygaTotoshka
  */
-public class DockResult /*implements WritableComparable<LongWritable> */{
+public class DockResult {
     private String id;
     private String pathDLGinHDFS;
     private String target;
     private String ligand;
     private String flexiblePart;
-    private int runs;
-    private float energy;
-    private float rmsd;
-    private int numHBonds;
+    private String runs;
+    private String energy;
+    private String rmsd;
+    private String numHBonds;
     private String HBonds;
     private boolean success;
     private String causeFail;
@@ -37,9 +37,9 @@ public class DockResult /*implements WritableComparable<LongWritable> */{
 
     public DockResult(String id, String pathToHDFS, LongWritable key) {
         this.id = id;
-        this.runs = 10;
-        this.rmsd = 0F;
-        this.numHBonds = 0;
+        this.runs = "10";
+        this.rmsd = "0";
+        this.numHBonds = "0";
         this.HBonds = "";
         this.pathDLGinHDFS = pathToHDFS + "/" + id + ".dlg";
         String[] parts = id.split("_");
@@ -47,7 +47,7 @@ public class DockResult /*implements WritableComparable<LongWritable> */{
         this.ligand = parts[1];
         this.flexiblePart = parts[2];
         this.key = key;
-        this.energy = -1000.001F;
+        this.energy = "-1000.001";
         this.success = true;
         this.causeFail = "Unknown status";
         try {
@@ -61,13 +61,13 @@ public class DockResult /*implements WritableComparable<LongWritable> */{
         this.id = "id";
         this.pathDLGinHDFS = "/" + id + ".dlg";
         this.key = new LongWritable(0);
-        this.energy = -1000.001F;
+        this.energy = "-1000.001";
         this.success = true;
         this.causeFail = "Unknown status";
         this.node = "Unknown";
-        this.runs = 10;
-        this.rmsd = 0F;
-        this.numHBonds = 0;
+        this.runs = "10";
+        this.rmsd = "0";
+        this.numHBonds = "0";
         this.HBonds = "";
         this.target = "None";
         this.ligand = "None";
@@ -80,25 +80,22 @@ public class DockResult /*implements WritableComparable<LongWritable> */{
 
     public void fail(String cause) {
         success = false;
-        energy = -100000F;//Warning dont use static constant
+        energy = "-100000";//Warning dont use static constant
         causeFail = cause;
     }
 
     public void success(String pathToResult,FileSystem system) throws IOException {
         success = true;
-        parseResults(pathToResult,system);
         causeFail = "Not Fail";
+        ArrayList<String> lines = FileUtils.readFile(pathToResult,system);
+        String[] data = lines.get(1).split(",");
+        runs = data[1];
+        energy = data[4];
+        rmsd = data[5];
+        HBonds = data[6];
+        numHBonds = data[7];
     }
 
-    private void parseResults(String path,FileSystem system) throws IOException {
-        ArrayList<String> lines = FileUtils.readFile(path,system);
-        String[] data = lines.get(1).split(",");
-        runs = Integer.parseInt(data[1]);
-        energy = Float.parseFloat(data[4]);
-        rmsd = Float.parseFloat(data[5]);
-        HBonds = data[6];
-        numHBonds = Integer.parseInt(data[7]);
-    }
     public boolean hasSuccessDLG(FileSystem sys) {
         try {
             ArrayList<String> lines = FileUtils.readFile(pathDLGinHDFS, sys);
@@ -114,41 +111,7 @@ public class DockResult /*implements WritableComparable<LongWritable> */{
             return false;
         }
     }
-    /*  @Override
-    public void readFields(DataInput dataInput) throws IOException {
-        id = dataInput.readUTF();
-        pathDLGinHDFS = dataInput.readUTF();
-        success = dataInput.readBoolean();
-        energy = dataInput.readFloat();
-        causeFail = dataInput.readUTF();
-        key = new LongWritable();
-        key.readFields(dataInput);
-        node = dataInput.readUTF();
-        rmsd = dataInput.readFloat();
-        HBonds = dataInput.readUTF();
-        numHBonds = dataInput.readInt();
-        runs = dataInput.readInt();
-        target = dataInput.readUTF();
-        ligand = dataInput.readUTF();
-        flexiblePart = dataInput.readUTF();
-    }
-  @Override
-    public void write(DataOutput dataOutput) throws IOException {
-        dataOutput.writeUTF(id);
-        dataOutput.writeUTF(pathDLGinHDFS);
-        dataOutput.writeBoolean(success);
-        dataOutput.writeFloat(energy);
-        dataOutput.writeUTF(causeFail);
-        key.write(dataOutput);
-        dataOutput.writeUTF(node);
-        dataOutput.writeFloat(rmsd);
-        dataOutput.writeUTF(HBonds);
-        dataOutput.writeInt(numHBonds);
-        dataOutput.writeInt(runs);
-        dataOutput.writeUTF(target);
-        dataOutput.writeUTF(ligand);
-        dataOutput.writeUTF(flexiblePart);
-    }*/
+
     @Override
     public String toString() {
         String path = success ? pathDLGinHDFS : "None";
@@ -166,18 +129,12 @@ public class DockResult /*implements WritableComparable<LongWritable> */{
 
 
     private String getTime(){
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");
         Date start = new Date(System.currentTimeMillis());
+
         return format.format(start);
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
     public String getPathDLGinHDFS() {
         return pathDLGinHDFS;
     }
@@ -185,100 +142,16 @@ public class DockResult /*implements WritableComparable<LongWritable> */{
         this.pathDLGinHDFS = pathDLGinHDFS;
     }
 
-    public String getTarget() {
-        return target;
-    }
-
-    public void setTarget(String target) {
-        this.target = target;
-    }
-
-    public String getLigand() {
-        return ligand;
-    }
-
-    public void setLigand(String ligand) {
-        this.ligand = ligand;
-    }
-
-    public String getFlexiblePart() {
-        return flexiblePart;
-    }
-
-    public void setFlexiblePart(String flexiblePart) {
-        this.flexiblePart = flexiblePart;
-    }
-
-    public int getRuns() {
-        return runs;
-    }
-
-    public void setRuns(int runs) {
-        this.runs = runs;
-    }
-
-    public float getEnergy() {
-        return energy;
-    }
-
-    public void setEnergy(float energy) {
-        this.energy = energy;
-    }
-
-    public float getRmsd() {
-        return rmsd;
-    }
-
-    public void setRmsd(float rmsd) {
-        this.rmsd = rmsd;
-    }
-
-    public int getNumHBonds() {
-        return numHBonds;
-    }
-
-    public void setNumHBonds(int numHBonds) {
-        this.numHBonds = numHBonds;
-    }
-
-    public String getHBonds() {
-        return HBonds;
-    }
-
-    public void setHBonds(String HBonds) {
-        this.HBonds = HBonds;
-    }
     public boolean isSuccess() {
         return success;
-    }
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public String getCauseFail() {
-        return causeFail;
-    }
-
-    public void setCauseFail(String causeFail) {
-        this.causeFail = causeFail;
     }
 
     public LongWritable getKey() {
         return key;
     }
 
-    public void setKey(LongWritable key) {
-        this.key = key;
-    }
-
     public String getNode() {
         return node;
     }
-
-    public void setNode(String node) {
-        this.node = node;
-    }
-
-
 
 }

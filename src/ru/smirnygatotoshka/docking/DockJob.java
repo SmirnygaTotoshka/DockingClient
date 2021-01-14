@@ -97,8 +97,10 @@ public class DockJob extends Configured implements Tool {
 				if (result.isSuccess()) {
 					outputCollector.collect(result.getKey(), result.getText());
 					client.send(Statistics.Counters.SUCCESS, 1);
-				} else
+				}
+				else {
 					client.send(Statistics.Counters.FAILED, 1);
+				}
 				System.out.println(result.toString());
 			}
 			else{
