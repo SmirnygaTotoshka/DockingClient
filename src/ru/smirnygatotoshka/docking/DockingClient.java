@@ -17,12 +17,17 @@ public class DockingClient {
         log = new Log(clusterProperties.getWorkspaceLocalDir() + File.separator + id + "_client.log");
     }
 
-    public void send(Statistics.Counters counter, int num){
-        String increment = formIncrement(counter, num);
+    public void send(DockResult result){
+        String increment = "";
+        if (result.isSuccess())
+            increment = formIncrement(Statistics.Counters.SUCCESS, 1);
+        else
+            increment = formIncrement(Statistics.Counters.FAILED, 1);
         try{
             this.socket = new Socket(InetAddress.getByName(clusterProperties.getIpAddressMasterNode()), clusterProperties.getPort());
             PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
             out.println(increment);
+            out.println(result.toString());
             out.flush();
             out.close();
             socket.close();

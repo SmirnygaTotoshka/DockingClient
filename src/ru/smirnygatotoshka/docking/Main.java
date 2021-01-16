@@ -22,7 +22,7 @@ public class Main {
      * */
     public static void main(String[] args) {
         int res = 0;
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");
         Date start = new Date(System.currentTimeMillis());
         Date finish;
         ClusterProperties cluster = null;

@@ -73,10 +73,6 @@ public class DockResult {
         this.ligand = "None";
         this.flexiblePart = "None";
     }
-    /*@Override
-    public int compareTo(LongWritable o) {
-        return key.compareTo(o);
-    }*/
 
     public void fail(String cause) {
         success = false;

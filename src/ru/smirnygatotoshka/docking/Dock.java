@@ -355,7 +355,7 @@ public class Dock {
 
 
 	private String getTime(){
-		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");
 		Date start = new Date(System.currentTimeMillis());
 		return format.format(start);
 	}

@@ -9,12 +9,19 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cec54ce2-7521-4ebe-8f26-06fbe644a3c6" name="Plans" comment="Глобальные изменения: убран этап Reduce, этап анализа добавлен в мап и реализуется измененным скриптом summarize_docking.py">
+    <list default="true" id="cec54ce2-7521-4ebe-8f26-06fbe644a3c6" name="Plans" comment="DockResult числовые свойства переделаны в строковые">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockingClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockingClient.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/DockingClient_jar/DockingClient.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/DockingClient_jar/DockingClient.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Dock$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Dock$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Dock.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/Dock.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockJob$DockMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockJob$DockMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DockingClient/ru/smirnygatotoshka/docking/DockResult.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Dock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Dock.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockJob.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockResult.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/DockingServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ru/smirnygatotoshka/docking/Main.java" afterDir="false" />
     </list>
     <list id="2d452110-0e54-4c17-a803-f55666bd61b8" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -371,7 +378,14 @@
       <option name="project" value="LOCAL" />
       <updated>1610519622274</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="DockResult числовые свойства переделаны в строковые">
+      <created>1610662235439</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1610662235440</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -406,7 +420,8 @@
     <MESSAGE value="Попвтка сделать адекватными счетчики прогресса" />
     <MESSAGE value="Косметические изменения в счетчике прогресса" />
     <MESSAGE value="Глобальные изменения: убран этап Reduce, этап анализа добавлен в мап и реализуется измененным скриптом summarize_docking.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="Глобальные изменения: убран этап Reduce, этап анализа добавлен в мап и реализуется измененным скриптом summarize_docking.py" />
+    <MESSAGE value="DockResult числовые свойства переделаны в строковые" />
+    <option name="LAST_COMMIT_MESSAGE" value="DockResult числовые свойства переделаны в строковые" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="WindowStateProjectService">
@@ -470,10 +485,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="434" y="234" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1366.728@0.0.1366.728" timestamp="1606846897709" />
-    <state x="194" y="0" key="CommitChangelistDialog2" timestamp="1610519589886">
+    <state x="194" y="0" key="CommitChangelistDialog2" timestamp="1610662207806">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="194" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1610519589885" />
+    <state x="194" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1610662207806" />
     <state x="430" y="83" key="DetectedRootsChooserDialog" timestamp="1605998869747">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -538,10 +553,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="92" y="92" width="1182" height="544" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1366.728@0.0.1366.728" timestamp="1610402473157" />
-    <state x="391" y="193" key="com.intellij.ide.util.TipDialog" timestamp="1610656765696">
+    <state x="391" y="193" key="com.intellij.ide.util.TipDialog" timestamp="1610789605389">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="391" y="193" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1610656765696" />
+    <state x="391" y="193" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1610789605389" />
     <state x="387" y="266" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1606002132287">
       <screen x="0" y="0" width="1366" height="728" />
     </state>

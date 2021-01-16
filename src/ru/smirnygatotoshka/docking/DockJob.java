@@ -94,13 +94,8 @@ public class DockJob extends Configured implements Tool {
 			Dock d = new Dock(line, clusterProperties, id);
 			if (!d.hasTrouble()) {
 				DockResult result = d.launch();
-				if (result.isSuccess()) {
-					outputCollector.collect(result.getKey(), result.getText());
-					client.send(Statistics.Counters.SUCCESS, 1);
-				}
-				else {
-					client.send(Statistics.Counters.FAILED, 1);
-				}
+				outputCollector.collect(result.getKey(), result.getText());
+				client.send(result);
 				System.out.println(result.toString());
 			}
 			else{

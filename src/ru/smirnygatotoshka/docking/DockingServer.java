@@ -1,9 +1,6 @@
 package ru.smirnygatotoshka.docking;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -17,9 +14,12 @@ public class DockingServer extends Thread{
     private ServerSocket server;
     private ExecutorService executorService = Executors.newFixedThreadPool(50);
     private Statistics statistics = Statistics.getInstance();
-
+    //write to server local filesystem
+    private BufferedWriter backupResult;
     public DockingServer(ClusterProperties clusterProperties) throws IOException {
         this.server = new ServerSocket(clusterProperties.getPort(), 1, InetAddress.getByName(clusterProperties.getIpAddressMasterNode()));
+        String pathToBackupResult = clusterProperties.getWorkspaceLocalDir() + File.separator + "result.tsv";
+        this.backupResult = new BufferedWriter(new FileWriter(pathToBackupResult, true));
     }
 
     @Override
@@ -29,7 +29,7 @@ public class DockingServer extends Thread{
             listen();
         }
         catch (Exception e) {
-            System.err.println("Server is fall.");
+            System.out.println("Server is fall.");
             e.printStackTrace();
         }
     }
@@ -57,6 +57,7 @@ public class DockingServer extends Thread{
                 System.out.println("Connection has closed.");
             }
         }
+        backupResult.close();
         server.close();
         executorService.shutdown();
         System.out.println("Server is stopped.");
@@ -70,12 +71,6 @@ public class DockingServer extends Thread{
         Statistics.Counters c = Statistics.Counters.valueOf(comp[0]);
         synchronized (statistics) {
             statistics.incrCounter(c, num);
-        }
-        printAnswer();
-    }
-
-    private void printAnswer(){
-        synchronized (statistics) {
             String bar = getTime() + "\tExecution[";
             try {
                 float progress = ((float)statistics.getSuccess() + statistics.getFailed()) / statistics.getAll() * 100;
@@ -86,9 +81,9 @@ public class DockingServer extends Thread{
                 for (int i = symbols; i < 20; i++){
                     bar += "-";
                 }
-                bar += "]\t" + progress + "%\n" +
+                bar += "]\t" + String.format("%.4f",progress) + "%\n" +
                         "Success = " + statistics.getSuccess() + "/" + statistics.getAll() + "; Failed = " +
-                                       statistics.getFailed() + "/" + statistics.getAll();
+                        statistics.getFailed() + "/" + statistics.getAll();
                 System.out.println(bar);
             }
             catch (ArithmeticException e){
@@ -96,10 +91,16 @@ public class DockingServer extends Thread{
                 System.out.println(bar);
             }
         }
+         synchronized (backupResult){
+            backupResult.write(reader.readLine());
+            backupResult.newLine();
+            backupResult.flush();
+        }
     }
 
+
     private String getTime(){
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");
         Date start = new Date(System.currentTimeMillis());
         return format.format(start);
     }
