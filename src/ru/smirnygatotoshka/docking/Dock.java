@@ -139,6 +139,10 @@ public class Dock {
 			dockResult.fail("IOException: " + e.getMessage());
 			msg.add("IOException: " + e.getMessage());
 		}
+		catch (Error | Exception e){
+			dockResult.fail("Strange things: " + e.getMessage());
+			msg.add("Strange things: " + e.getMessage());
+		}
 		finally {
 			try {
 				Path wd = new Path(localDir);
@@ -162,7 +166,6 @@ public class Dock {
 					s += "has DLG";
 				}
 				else {
-					dockResult.setPathDLGinHDFS("None");
 					s += "not DLG";
 				}
 				System.out.println(s);

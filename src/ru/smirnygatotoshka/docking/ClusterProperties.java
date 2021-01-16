@@ -1,16 +1,17 @@
 package ru.smirnygatotoshka.docking;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapred.JobConf;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * Содержит информацию о кластере, на котором выполняется программа, и некоторую информацию, необходимую для работы.
  * @author SmirnygaTotoshka
  * */
-public class ClusterProperties implements Writable {
+public class ClusterProperties {
     /** Константы-ключи, по которым восстанавливается экземпляр объекта на узлах из JobConf*/
 
     public static final String OUTPUT = "outputDir";
@@ -96,33 +97,8 @@ public class ClusterProperties implements Writable {
         return mapperNumber;
     }
 
-    @Override
-    public void write(DataOutput dataOutput) throws IOException {
-        dataOutput.writeUTF(outputPath);
-        dataOutput.writeUTF(taskName);
-        dataOutput.writeUTF(workspaceLocalDir);
-        dataOutput.writeUTF(pathToMGLTools);
-        dataOutput.writeUTF(ipAddressMasterNode);
-        dataOutput.writeInt(port);
-        dataOutput.writeUTF(mapperNumber);
-        jobConf.write(dataOutput);
-    }
-
     public int getPort() {
         return port;
-    }
-
-    @Override
-    public void readFields(DataInput dataInput) throws IOException {
-        this.outputPath = dataInput.readUTF();
-        this.taskName = dataInput.readUTF();
-        this.workspaceLocalDir = dataInput.readUTF();
-        this.pathToMGLTools = dataInput.readUTF();
-        this.ipAddressMasterNode = dataInput.readUTF();
-        this.port = dataInput.readInt();
-        this.mapperNumber = dataInput.readUTF();
-        jobConf = new JobConf();
-        jobConf.readFields(dataInput);
     }
 
 

@@ -1,18 +1,11 @@
 package ru.smirnygatotoshka.docking;
 
-import org.apache.hadoop.io.Writable;
-
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-
 /**
  * Содержит описание подготовительных этапов для докинга
  *
  * @author SmirnygaTotoshka
  */
-public class DockingProperties implements Writable {
-    //TODO - tests
+public class DockingProperties {
     /**
      * Путь к файлам в hdfs
      * */
@@ -126,30 +119,6 @@ public class DockingProperties implements Writable {
             id = receptor + "_" + ligand + "_" + receptorFlexiblePart + "_" + gpfName;
         }
         return id;
-    }
-
-    @Override
-    public void readFields(DataInput arg0) throws IOException {
-        pathToFiles = arg0.readUTF();
-        receptor = arg0.readUTF();
-        receptorFlexiblePart = arg0.readUTF();
-        ligand = arg0.readUTF();
-        gpfName = arg0.readUTF();
-        gpfParameters = arg0.readUTF();
-        dpfName = arg0.readUTF();
-        dpfParameters = arg0.readUTF();
-    }
-
-    @Override
-    public void write(DataOutput arg0) throws IOException {
-        arg0.writeUTF(pathToFiles);
-        arg0.writeUTF(receptor);
-        arg0.writeUTF(receptorFlexiblePart);
-        arg0.writeUTF(ligand);
-        arg0.writeUTF(gpfName);
-        arg0.writeUTF(gpfParameters);
-        arg0.writeUTF(dpfName);
-        arg0.writeUTF(dpfParameters);
     }
 
     /**

@@ -48,7 +48,7 @@ public class DockResult {
         this.flexiblePart = parts[2];
         this.key = key;
         this.energy = "-1000.001";
-        this.success = true;
+        this.success = false;
         this.causeFail = "Unknown status";
         try {
             this.node = InetAddress.getLocalHost().getHostName();
@@ -57,39 +57,28 @@ public class DockResult {
         }
     }
 
-    public DockResult(){
-        this.id = "id";
-        this.pathDLGinHDFS = "/" + id + ".dlg";
-        this.key = new LongWritable(0);
-        this.energy = "-1000.001";
-        this.success = true;
-        this.causeFail = "Unknown status";
-        this.node = "Unknown";
-        this.runs = "10";
-        this.rmsd = "0";
-        this.numHBonds = "0";
-        this.HBonds = "";
-        this.target = "None";
-        this.ligand = "None";
-        this.flexiblePart = "None";
-    }
-
     public void fail(String cause) {
         success = false;
         energy = "-100000";//Warning dont use static constant
         causeFail = cause;
+        pathDLGinHDFS = "None";
     }
 
-    public void success(String pathToResult,FileSystem system) throws IOException {
+    public void success(String pathToResult,FileSystem system) throws IOException, TaskException {
         success = true;
         causeFail = "Not Fail";
         ArrayList<String> lines = FileUtils.readFile(pathToResult,system);
-        String[] data = lines.get(1).split(",");
-        runs = data[1];
-        energy = data[4];
-        rmsd = data[5];
-        HBonds = data[6];
-        numHBonds = data[7];
+        try {
+            String[] data = lines.get(1).split(",");
+            runs = data[1];
+            energy = data[4];
+            rmsd = data[5];
+            HBonds = data[6];
+            numHBonds = data[7];
+        }
+        catch (Exception | Error e){
+            throw new TaskException("TaskException: Cant parse success, cause " + e.getMessage());
+        }
     }
 
     public boolean hasSuccessDLG(FileSystem sys) {
@@ -133,9 +122,6 @@ public class DockResult {
 
     public String getPathDLGinHDFS() {
         return pathDLGinHDFS;
-    }
-    public void setPathDLGinHDFS(String pathDLGinHDFS) {
-        this.pathDLGinHDFS = pathDLGinHDFS;
     }
 
     public boolean isSuccess() {
