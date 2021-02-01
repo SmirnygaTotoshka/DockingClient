@@ -28,6 +28,7 @@ public class DockingClient {
             PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
             out.println(increment);
             out.println(result.toString());
+            out.println(formReport(result));
             out.flush();
             out.close();
             socket.close();
@@ -42,6 +43,9 @@ public class DockingClient {
     public String formIncrement(Statistics.Counters counter, int num) {
         return counter.name() + "=" + num;
     }
+
+    private String formReport(DockResult result){return result.getId() + "=" + result.isSuccess();}
+
     public void close() throws IOException {
         log.close();
     }

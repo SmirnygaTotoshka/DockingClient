@@ -58,10 +58,10 @@ public class DockJob extends Configured implements Tool {
 		jobConf.setInputFormat(TextInputFormat.class);
 		jobConf.setNumMapTasks(Integer.parseInt(cluster.getMapperNumber()));
 		jobConf.setNumReduceTasks(0);
+		jobConf.setMaxMapAttempts(5);
 		jobConf.set("mapreduce.task.timeout", "0");
         Statistics.getInstance().incrCounter(Statistics.Counters.ALL,FileUtils.readFile(arg0[0],FileSystem.get(jobConf)).size());
 		RunningJob job = JobClient.runJob(jobConf);
-
 		return 0;
 	}
 
@@ -81,132 +81,28 @@ public class DockJob extends Configured implements Tool {
 		public void configure(JobConf job) {
 			super.configure(job);
 			this.clusterProperties = new ClusterProperties(job);
-			try {
-				this.client = new DockingClient(this.clusterProperties,"map_" + (new Random().nextInt(10000)));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
 		}
 
 		@Override
 		public void map(LongWritable id, Text line, OutputCollector<LongWritable, Text> outputCollector, Reporter reporter) throws IOException {
 			Dock d = new Dock(line, clusterProperties, id);
+			DockResult result = new DockResult(d.getDockingProperties().getId(),d.getDockingProperties().getPathToFiles(),id,clusterProperties.getJobConf());
 			if (!d.hasTrouble()) {
-				DockResult result = d.launch();
+				result = d.launch();
 				outputCollector.collect(result.getKey(), result.getText());
-				client.send(result);
-				System.out.println(result.toString());
+				try {
+					client = new DockingClient(this.clusterProperties,"map_" + (new Random().nextInt(10000)));
+					client.send(result);
+					client.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			else{
-				System.out.println(d.getTrouble());
+				result.fail(d.getTrouble());
+				d.dispose();
 			}
-			client.close();
+			System.out.println(result.toString());
 		}
 	}
-	/**
-	 * First argument - dock id, type Text
-	 * * Second argument - dock result without success and energy in normal, type Dock result
-	 * * Third argument - dock id, type LongWritable
-	 * * Fourth argument - full dock result, type Text
-	 *
-	 * @author SmirnygaTotoshka
-	 */
-/*	public static class DockReducer extends MapReduceBase implements Reducer<Text, DockResult, NullWritable, Text> {
-
-		private DockingClient client;
-		private ClusterProperties clusterProperties;
-		private FileSystem hdfs;
-		private String error_message;
-
-		@Override
-		public void configure(JobConf job) {
-			super.configure(job);
-			super.configure(job);
-			this.clusterProperties = new ClusterProperties(job);
-			try {
-				this.client = new DockingClient(this.clusterProperties,"reduce_" + (new Random().nextInt(10000)));
-				this.hdfs = FileSystem.get(job);
-				this.error_message = "";
-			} catch (IOException e) {
-				error_message = "Не удалось установить контакт с файловой системой.";
-			}
-		}
-
-		@Override
-		public void reduce(Text text, Iterator<DockResult> iterator, OutputCollector<NullWritable, Text> outputCollector, Reporter reporter) throws IOException {
-			while (iterator.hasNext()) {
-				DockResult result = iterator.next();
-				if (result.isSuccess() && error_message.contentEquals("")) {
-					if (error_message.contentEquals("")) {
-						if (result.hasSuccessDLG(hdfs)) {
-							float energy = parseHistogram(result.getPathDLGinHDFS());
-							if (energy == -100000F) {
-								result.fail("Не найдено значение энергии");
-								client.send(Statistics.Counters.ANALYZE_FAIL, 1);
-								reporter.incrCounter(Statistics.Counters.ANALYZE_FAIL,1);
-							} else if (energy == -100000F - 1) {
-								result.fail("Не удалось открыть DLG.");
-								client.send(Statistics.Counters.ANALYZE_FAIL, 1);
-								reporter.incrCounter(Statistics.Counters.ANALYZE_FAIL,1);
-							} else if (energy == -100000F - 2) {
-								result.fail("Не удалось считать энергию.");
-								client.send(Statistics.Counters.ANALYZE_FAIL, 1);
-								reporter.incrCounter(Statistics.Counters.ANALYZE_FAIL,1);
-							} else {
-								result.success(energy);
-								client.send(Statistics.Counters.SUCCESS, 1);
-								reporter.incrCounter(Statistics.Counters.SUCCESS,1);
-							}
-						}
-						else {
-							result.fail("Провал autodock.");
-							client.send(Statistics.Counters.EXECUTION_FAIL, 1);
-							reporter.incrCounter(Statistics.Counters.EXECUTION_FAIL,1);
-						}
-					} else {
-						result.fail(error_message);
-						client.send(Statistics.Counters.ANALYZE_FAIL, 1);
-						reporter.incrCounter(Statistics.Counters.ANALYZE_FAIL,1);
-					}
-				}
-				System.out.println(result.toString());
-				outputCollector.collect(result.getKey(), result.getText());
-			}
-		}
-		*//**
-		 * @return DockResult.FAILED_ENERGY - 2 - <code>NumberFormatException</code>
-		 *//*
-		private float parseHistogram(String pathToDLG) {
-			try {
-				*//**
-				 * Ключевая фраза,после которой начинается искомая таблица с энергиями
-				 *//*
-				final String START_HISTOGRAM = "CLUSTERING HISTOGRAM";
-				ArrayList<String> lines = FileUtils.readFile(pathToDLG, hdfs);
-				int i = -1;
-				boolean findIt = false;
-				for (int j = 0; j < lines.size(); j++) {
-					if (lines.get(j).contains(START_HISTOGRAM))
-						findIt = true;
-					if (findIt)
-						i++;
-					if (i == 9) // Данные таблицы начинаются на 9 строке после ключевой фразы
-					{
-						String[] data = lines.get(j).split("\\s+\\|");
-						return Float.parseFloat(data[1].replace(" ", ""));
-					}
-				}
-				return -100000F;
-			} catch (IOException e) {
-				return -100000F - 1;
-			} catch (NumberFormatException e) {
-				return -100000F - 2;
-			}
-		}
-
-	}*/
-
-
-
 }

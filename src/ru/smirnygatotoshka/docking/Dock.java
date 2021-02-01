@@ -59,6 +59,7 @@ public class Dock {
 		try {
 			this.local = FileSystem.getLocal(clusterProperties.getJobConf());
 			this.hdfs = FileSystem.get(clusterProperties.getJobConf());
+			dockResult = new DockResult(dockingProperties.getId(), dockingProperties.getPathToFiles(), key, clusterProperties.getJobConf());
 		}
 		catch (IOException e) {
 			this.errorMessage = "Ошибка при получения доступа к файловым системам:" + e.getMessage();
@@ -73,8 +74,7 @@ public class Dock {
 		} catch (IOException e) {
 			errorMessage = "Ошибка при создании лога "+e.getMessage();
 		}
-		dockResult = new DockResult(dockingProperties.getId(), dockingProperties.getPathToFiles(), key);
-		if (dockResult.hasSuccessDLG(hdfs))
+		if (dockResult.hasSuccessDLGinHDFS())
 			errorMessage = "Уже имеется посчитанные результаты для этой пары.";
 	}
 
@@ -122,7 +122,7 @@ public class Dock {
 									FileUtils.copy(local, getDLGLocalPath(), hdfs, dockResult.getPathDLGinHDFS());
 									if (isSuccessLaunchCommand(Pipeline.ANALYZE, getAnalyzeOutLocalPath())){
 										dockResult.success(getAnalyzeOutLocalPath(), local);
-										msg.add("SUCCESS");
+										msg.add("SUCCESS\n");
 									} else throw new TaskException("Не удалось проанализировать.");
 								} else throw new TaskException("Неудача на этапе Autodock");
 							} else throw new TaskException("Неудача на этапе подготовке DPF");
@@ -144,45 +144,35 @@ public class Dock {
 			msg.add("Strange things: " + e.getMessage());
 		}
 		finally {
-			try {
-				Path wd = new Path(localDir);
-				if (FileUtils.exist(wd,local))
-					FileUtils.deleteFolder(wd, local);
-			}
-			catch (IOException | TaskException e) {
-				String s = "Не удалось высвободить ресурсы для " + dockingProperties.getId() + "\n" + e.getMessage();
-				msg.add(s);
-				msg.add(dockingProperties.toString());
-
-			}
-			if (!errorMessage.isEmpty()) {
-				msg.add(dockingProperties.toString());
-				msg.add(errorMessage);
-			}
-			log.writeRecord(msg);
-			try {
-				String s = getTime() + "\t"+ key.toString() + "\t" + dockResult.getNode() +"\t" + dockingProperties.getId() + "\t";
-				if (dockResult.hasSuccessDLG(hdfs)) {
-					s += "has DLG";
-				}
-				else {
-					s += "not DLG";
-				}
-				System.out.println(s);
-				log.close();
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
+			dispose();
 			return dockResult;
 		}
 	}
 
+	public void dispose(){
+		try {
+			Path wd = new Path(localDir);
+			if (FileUtils.exist(wd,local))
+				FileUtils.deleteFolder(wd, local);
+
+			if (hasTrouble()) {
+				msg.add(dockingProperties.toString());
+				msg.add(errorMessage);
+			}
+			log.writeRecord(msg);
+			log.close();
+		}
+		catch (IOException | TaskException e) {
+			String s = "Не удалось высвободить ресурсы для " + dockingProperties.getId() + "\n" + e.getMessage();
+			System.out.println(s);
+			e.printStackTrace();
+		}
+	}
 	public boolean hasTrouble(){
 		return !errorMessage.isEmpty();
 	}
 	public String getTrouble(){
-		return getTime() + "\t" + errorMessage;
+		return getTime() + "\t" + errorMessage + "\t" + dockingProperties.getId();
 	}
 	/**Формирует текст команды для запуска в командной строке*/
 	private String formCommand(Pipeline action) {
