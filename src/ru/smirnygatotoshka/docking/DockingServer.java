@@ -12,13 +12,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class DockingServer extends Thread{
+
     private ServerSocket server;
     private ExecutorService executorService = Executors.newFixedThreadPool(50);
     private Statistics statistics = Statistics.getInstance();
     private ClusterProperties clusterProperties;
+    //id and status dockings which be send to server
     private HashMap<String, Boolean> received = new HashMap<String, Boolean>();
     //write to server local filesystem
     private BufferedWriter backupResult;
+
     public DockingServer(ClusterProperties clusterProperties) throws IOException {
         this.clusterProperties = clusterProperties;
         this.server = new ServerSocket(clusterProperties.getPort(), 1, InetAddress.getByName(clusterProperties.getIpAddressMasterNode()));
@@ -102,12 +105,9 @@ public class DockingServer extends Thread{
                     System.out.println("Success retry for " + id);
                     statistics.incrCounter(Statistics.Counters.FAILED, -1);
                     statistics.incrCounter(Statistics.Counters.SUCCESS,1);
-                    printProgressBar();
                     received.put(id, true);
                 }
-                else{
-                    printProgressBar();
-                }
+                printProgressBar();
             }
         }
          synchronized (backupResult){
